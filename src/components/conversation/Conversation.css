@@ -1,0 +1,113 @@
+.left>.conversations {
+    overflow-y: scroll;
+    height: 100%;
+    padding: 10px 0 0 0;
+    overflow-x: hidden;
+}
+
+.conversations>.person {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    gap: 10px;
+}
+
+.conversations>.person:hover {
+    background-color: #f0f0f0af;
+    cursor: pointer;
+}
+
+.conversations>.person>.information {
+    font-family: "Open Sans";
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    overflow: hidden;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.conversations>.person>.information>.username {
+    font-family: "Open Sans";
+    font-size: 14px;
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    gap: 4px;
+    width: 100%;
+    align-items: center;
+}
+
+.conversations>.person>.information>.content {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    color: black;
+}
+
+.conversations>.person>.information>.content>.message {
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Roboto";
+    color: #000000;
+}
+
+.conversations>.person>.information>.content>.new {
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Roboto";
+    color: black;
+    font-weight: 700;
+}
+
+.conversations>.person>.box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conversations>.person>.box>.image {
+    width: clamp(50px, 50px, 50px);
+    height: clamp(50px, 50px, 50px);
+    border-radius: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conversations>.person>.box>.online {
+    min-width: 1.1rem;
+    min-height: 1.1rem;
+    /* background-color: lawngreen; */
+    border-radius: 100%;
+    position: absolute;
+    border: 3px solid white;
+    right: 0;
+    bottom: 0;
+}
+
+.conversations>.person>.status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.conversations>.person>.status>.point {
+    min-height: 8px;
+    min-width: 8px;
+    background-color: #0084ff;
+    border-radius: 100%;
+}

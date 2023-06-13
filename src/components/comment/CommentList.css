@@ -1,0 +1,16 @@
+.user-comment:hover .comment-option-icon {
+    display: inline-block;
+}
+
+.comment-option-icon {
+    display: none;
+}
+
+.comment-option::after {
+    content: "";
+    position: absolute;
+    top: -11px;
+    border-color: transparent transparent black transparent;
+    right: 52px;
+    border-width: 8px 8px 8px 8px;
+}

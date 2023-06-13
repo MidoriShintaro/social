@@ -1,0 +1,7 @@
+.notification {
+    width: 17%;
+    border-right: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 2px 10px 8px 0px #dfdfdf;
+    animation: Open ease-in .5s;
+}

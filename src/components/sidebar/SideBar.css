@@ -1,0 +1,57 @@
+.sidebar {
+    position: relative;
+    transition: all 0.4s ease-in;
+}
+
+.sidebar-closed {
+    width: 105px;
+    animation: Close ease-in .4s;
+}
+
+.sidebar-open {
+    animation: Open ease-in .4s;
+}
+
+.sidebar-content {
+    margin-top: 30px;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.sidebar-list-item {
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+    animation: Open ease-in .4s;
+}
+
+.sidebar-list-item:hover .sidebar-icon {
+    transform: scale(1.1);
+}
+
+.sidebar-more {
+    margin-top: 150px !important;
+}
+
+@keyframes Open {
+    from {
+        width: 106px;
+        opacity: 1;
+    }
+
+    to {
+        width: auto;
+        opacity: 1;
+    }
+}
+
+@keyframes Close {
+    from {
+        width: 330px;
+        opacity: 1;
+    }
+
+    to {
+        width: 106px;
+        opacity: 1;
+    }
+}

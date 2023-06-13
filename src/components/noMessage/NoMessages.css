@@ -1,0 +1,27 @@
+.circle {
+    border-radius: 50%;
+    border: 4px solid black;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yourmess {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    flex-direction: column;
+    border-left: 1px solid #ccc;
+}
+
+.yourmess h1 {
+    margin: 5px 0px;
+}
+
+.yourmess .text p {
+    color: #ccc;
+}

@@ -1,0 +1,26 @@
+.comment {
+    margin: 0 auto;
+    z-index: 100;
+}
+
+.comment-footer-timeline span {
+    font-size: 12px;
+}
+
+.comment-img {
+    height: 520px;
+}
+
+.comment-content {
+    height: 100%;
+}
+
+.comment-body-content {
+    height: 261px;
+}
+
+.comment-img,
+.comment-content {
+    /* height: 100%; */
+    width: 500px;
+}
