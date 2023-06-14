@@ -23,10 +23,28 @@ export default function Comment({ show, data, socket }) {
   const { currentUser } = useContext(AuthContext);
   const [isLikePost, setIsLikePost] = useState(false);
   const [numLikePost, setNumLikePost] = useState(data.likes.length);
+  const [arrivalComment, setArrivalComment] = useState(null);
 
   useEffect(() => {
     setIsLikePost(data.likes.includes(currentUser.user._id));
   }, [currentUser, data]);
+
+  useEffect(() => {
+    socket.on("getComment", (data) => {
+      setArrivalComment({
+        content: data.content,
+        postId: data.postId,
+        userId: data.userId,
+        likes: [],
+      });
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (arrivalComment) {
+      setComments((preComment) => [...preComment, arrivalComment]);
+    }
+  }, [arrivalComment]);
 
   useEffect(() => {
     const getComments = async () => {
@@ -75,18 +93,39 @@ export default function Comment({ show, data, socket }) {
       postId: data._id,
       content,
     });
+    const body = {
+      receiverId: data.userId._id,
+      content: `${currentUser.user.username} comment your post`,
+      id: data._id,
+    };
+
     if (res.data.status === "success") {
+      socket.emit("sendComment", {
+        content,
+        userId: currentUser.user,
+        postId: data,
+      });
       res.data.comment.userId = currentUser.user;
       toast.success(res.data.message);
-      socket.emit("sendNotification", {
-        userId: currentUser.user,
-        content,
-        type: "comment",
-      });
+      if (currentUser.user._id !== data.userId._id) {
+        socket.emit("sendNotification", {
+          ...body,
+          userId: currentUser.user,
+          type: "comment",
+        });
+
+        await api.post("/notification", {
+          ...body,
+          userId: currentUser.user._id,
+          type: "post",
+        });
+      }
     }
     setContent("");
     setComments([...comments, res.data.comment]);
   };
+
+  console.log(comments);
 
   const handleClick = () => {
     show(false);
@@ -151,11 +190,12 @@ export default function Comment({ show, data, socket }) {
                 <ul>
                   {comments.map((com) => (
                     <>
-                      {com.postId === data._id && (
+                      {com.postId._id === data._id && (
                         <CommentList
                           comment={com}
                           user={currentUser.user}
                           socket={socket}
+                          key={com._id}
                         />
                       )}
                     </>

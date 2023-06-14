@@ -37,7 +37,7 @@ export default function CommentList({ comment, user, socket }) {
     e.preventDefault();
     const res = await api.patch(`/comment/${comment._id}`, {
       userId: user._id,
-      postId: comment.postId,
+      postId: comment.postId._id,
       content: updateComment,
     });
     if (res.data.status === "success") {
@@ -50,16 +50,27 @@ export default function CommentList({ comment, user, socket }) {
   };
 
   const handleLikeComment = async () => {
-    const res = await api.patch(`/${comment._id}/comment-likes`, {
+    const res = await api.patch(`/comment/${comment._id}/comment-likes`, {
       userId: user._id,
-      postId: comment.postId,
+      postId: comment.postId._id,
     });
+    const data = {
+      content: `${user.username} like your comment`,
+      id: comment.postId._id,
+      receiverId: comment.postId.userId,
+    };
     if (res.data.status === "success") {
       if (res.data.message.startsWith("Like")) {
         if (user._id !== comment.userId._id) {
           socket.emit("sendNotification", {
+            ...data,
             userId: user,
-            content: `${user.username} like your comment`,
+            type: "likeComment",
+          });
+          await api.post("/notification", {
+            ...data,
+            type: "post",
+            userId: user._id,
           });
         }
       }
@@ -91,7 +102,7 @@ export default function CommentList({ comment, user, socket }) {
             </div>
             <FontAwesomeIcon
               icon={isLikeComment ? faHeartSo : faHeartRe}
-              className="text-sm ml-4 mr-2"
+              className="text-sm ml-4 mr-2 hover:cursor-pointer"
               onClick={handleLikeComment}
             />
             <span className="text-gray-400 text-sm">{likeComment} likes</span>

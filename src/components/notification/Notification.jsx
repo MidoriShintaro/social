@@ -28,7 +28,7 @@ export default function Notification({ socket }) {
 
   useEffect(() => {
     if (arrivalLikePost) {
-      setNotification((preNot) => [...preNot, arrivalLikePost]);
+      setNotification((preNot) => [arrivalLikePost, ...preNot]);
       console.log(arrivalLikePost);
     }
   }, [arrivalLikePost]);
