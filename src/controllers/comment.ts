@@ -8,10 +8,12 @@ export const getAllComments = async (
   res: Response,
   next: NextFunction
 ) => {
-  const comments = await Comment.find().populate({
-    path: "userId",
-    select: "-password",
-  });
+  const comments = await Comment.find()
+    .populate({
+      path: "userId",
+      select: "-password",
+    })
+    .populate({ path: "postId" });
   if (!comments || comments.length === 0)
     return next(new HandleError("No Comment Founded", 404));
   res.status(200).json({

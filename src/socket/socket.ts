@@ -100,7 +100,27 @@ const initSocket = () => {
           id: data.id,
           type: "user",
         });
+      } else if (data.type === "comment") {
+        io.to(friend?.socketId).emit("getNotification", {
+          userId: data.userId,
+          receiverId: data.receiverId,
+          content: data.content,
+          id: data.id,
+          type: "post",
+        });
+      } else if (data.type === "likeComment") {
+        io.to(friend?.socketId).emit("getNotification", {
+          userId: data.userId,
+          receiverId: data.receiverId,
+          content: data.content,
+          id: data.id,
+          type: "post",
+        });
       }
+    });
+
+    socket.on("sendComment", (data) => {
+      io.emit("getComment", data);
     });
 
     socket.on("disconnect", () => {
