@@ -30,8 +30,6 @@ export const createPost = async (
   res: Response,
   next: NextFunction
 ) => {
-  // console.log(req.body);
-  // console.log(req.file);
   const img = req.file?.filename === undefined ? "" : req.file.filename;
   const { userId, content, desc } = req.body;
   if (!userId) return next(new HandleError("User Id must have required", 400));
@@ -74,11 +72,15 @@ export const updatePost = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
+  const img = req.file === undefined ? req.body.img : req.file.filename;
+  const { userId, content, desc } = req.body;
   const post = await Post.findById(id);
   if (!post) return next(new HandleError("Cannot find post with id", 404));
-  if (post.userId !== req.body.userId)
-    return next(new HandleError("You does not permission", 403));
-  await Post.findByIdAndUpdate(id, req.body, { new: true });
+  await Post.findByIdAndUpdate(
+    post._id,
+    { userId, content, desc, img },
+    { new: true }
+  );
   res.status(200).json({ status: "success", message: "Post has been updated" });
 };
 

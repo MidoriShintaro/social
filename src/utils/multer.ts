@@ -11,7 +11,6 @@ const configMulter = (destination: string): Multer => {
       file: Express.Multer.File,
       callback: DestinationCallBack
     ): void {
-      console.log(destination);
       callback(null, `src/public/${destination}`);
     },
     filename(

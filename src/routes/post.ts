@@ -17,7 +17,7 @@ router.use(protect);
 router.get("/", getAllPost);
 router.post("/", uploadPostImage, createPost);
 router.get("/:id", getPost);
-router.patch("/:id", updatePost);
+router.patch("/:id", uploadPostImage, updatePost);
 router.delete("/:id", deletePost);
 router.patch("/:id/like", LikePost);
 router.get("/timeline/:userId", Timeline);
