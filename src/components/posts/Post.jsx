@@ -3,9 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as faHeartRe,
   faComment,
-  faPaperPlane,
-  faBookmark,
-  faSmileBeam,
 } from "@fortawesome/free-regular-svg-icons";
 import {
   faEllipsis,
@@ -17,7 +14,7 @@ import { AuthContext } from "../../context/context";
 import axios from "../../axios/axios";
 import api from "../../axios/axios";
 
-export default function Post({ post, socket, show, data }) {
+export default function Post({ post, socket, showPost, showOptionPost, data }) {
   const { currentUser } = useContext(AuthContext);
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [like, setLike] = useState(post.likes.length);
@@ -73,7 +70,13 @@ export default function Post({ post, socket, show, data }) {
           </span>
         </div>
         <div className="post-title-more mr-1 hover:cursor-pointer hover:text-gray-300">
-          <FontAwesomeIcon icon={faEllipsis} />
+          <FontAwesomeIcon
+            icon={faEllipsis}
+            onClick={() => {
+              showOptionPost(true);
+              data(post);
+            }}
+          />
         </div>
       </div>
       <div className="post-content">
@@ -102,18 +105,6 @@ export default function Post({ post, socket, show, data }) {
                 className="hover:cursor-pointer"
               />
             </div>
-            <div className="ml-2">
-              <FontAwesomeIcon
-                icon={faPaperPlane}
-                className="hover:cursor-pointer"
-              />
-            </div>
-          </div>
-          <div className="post-save">
-            <FontAwesomeIcon
-              icon={faBookmark}
-              className="hover:cursor-pointer"
-            />
           </div>
         </div>
         <div className="post-footer-like mb-1">
@@ -130,7 +121,7 @@ export default function Post({ post, socket, show, data }) {
           <span
             className="text-gray-400 hover:cursor-pointer"
             onClick={() => {
-              show(true);
+              showPost(true);
               data(post);
             }}
           >
@@ -145,10 +136,6 @@ export default function Post({ post, socket, show, data }) {
               placeholder="Add a comment..."
             />
           </form>
-          <FontAwesomeIcon
-            icon={faSmileBeam}
-            className="text-gray-400 hover:cursor-pointer hover:text-gray-200"
-          />
         </div>
       </div>
     </div>

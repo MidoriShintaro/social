@@ -1,14 +1,35 @@
 import "./Post.css";
 
-export default function Post() {
+export default function Post({ showOptionPost, showCreatePost, update }) {
+  const handleClick = () => {
+    showOptionPost(false);
+  };
   return (
-    <div className="backdrop-post absolute w-full h-full flex justify-center items-center z-50 text-center hidden">
-      <div className="w-full h-full bg-black absolute opacity-60"></div>
+    <div className="backdrop-post absolute w-full h-full flex justify-center items-center z-50 text-center">
+      <div
+        className="w-full h-full bg-black absolute opacity-60"
+        onClick={handleClick}
+      ></div>
       <ul className="w-2/6 text-sm font-medium z-50 text-gray-900 bg-white border rounded-xl hover:cursor-pointer">
-        <li className="w-full p-3 border-b font-semibold text-lg border-gray-200 rounded-t-lg dark:border-gray-600 text-red-500">
-          Unfollow
+        <li
+          className="w-full p-3 border-b font-semibold text-lg border-gray-200 rounded-t-lg dark:border-gray-600 text-red-500"
+          onClick={() => {
+            showCreatePost(true);
+            showOptionPost(false);
+            update(true);
+          }}
+        >
+          Update
         </li>
-        <li className="w-full p-3 rounded-b-lg text-lg font-light">Cancle</li>
+        <li className="w-full p-3 border-b font-semibold text-lg border-gray-200 rounded-t-lg dark:border-gray-600 text-red-500">
+          Delete
+        </li>
+        <li
+          className="w-full p-3 rounded-b-lg text-lg font-light"
+          onClick={handleClick}
+        >
+          Cancle
+        </li>
       </ul>
     </div>
   );

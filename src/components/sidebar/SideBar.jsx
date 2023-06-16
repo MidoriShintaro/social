@@ -13,7 +13,7 @@ import { useState } from "react";
 import Search from "../search/Search";
 import Notification from "../notification/Notification";
 
-const Sidebar = ({ user, socket }) => {
+const Sidebar = ({ user, socket, showCreatePost, update }) => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
   const [typeSideBar, setTypeSideBar] = useState("");
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -109,7 +109,13 @@ const Sidebar = ({ user, socket }) => {
                   </span>
                 </div>
               </li>
-              <li className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item">
+              <li
+                className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item"
+                onClick={() => {
+                  showCreatePost(true);
+                  update(false);
+                }}
+              >
                 <div className="flex items-center p-2 text-gray-900 rounded-lg">
                   <FontAwesomeIcon
                     icon={faSquarePlus}

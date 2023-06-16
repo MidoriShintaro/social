@@ -16,7 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import CommentList from "../../comment/CommentList";
 
-export default function Comment({ show, data, socket }) {
+export default function Comment({ showPost, data, socket }) {
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [content, setContent] = useState("");
   const [comments, setComments] = useState([]);
@@ -125,10 +125,8 @@ export default function Comment({ show, data, socket }) {
     setComments([...comments, res.data.comment]);
   };
 
-  console.log(comments);
-
   const handleClick = () => {
-    show(false);
+    showPost(false);
   };
   return (
     <div className="backdrop-comment flex absolute w-full justify-center items-center z-50 h-full">

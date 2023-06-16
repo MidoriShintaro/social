@@ -5,7 +5,7 @@ import "./Feed.css";
 import api from "../../axios/axios";
 import { AuthContext } from "../../context/context";
 
-export default function Feed({ user, socket, show, data }) {
+export default function Feed({ user, socket, showPost, showOptionPost, data }) {
   const [post, setPost] = useState([]);
   const { currentUser } = useContext(AuthContext);
   useEffect(() => {
@@ -20,7 +20,14 @@ export default function Feed({ user, socket, show, data }) {
     <div className="feed basis-1/2">
       <Share user={user} />
       {post.map((p) => (
-        <Post key={p._id} post={p} socket={socket} show={show} data={data} />
+        <Post
+          key={p._id}
+          post={p}
+          socket={socket}
+          showPost={showPost}
+          showOptionPost={showOptionPost}
+          data={data}
+        />
       ))}
     </div>
   );
