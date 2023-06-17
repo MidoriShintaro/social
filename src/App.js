@@ -9,10 +9,24 @@ import Sidebar from "./components/sidebar/SideBar";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/context";
 import api from "./axios/axios";
+import { io } from "socket.io-client";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = useState({});
+  const [socket, setSocket] = useState(null);
+  useEffect(() => {
+    setSocket(io("http://localhost:4000"));
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("sendUser", currentUser.user._id);
+    socket?.on("getUser", (users) => {
+      console.log(users);
+    });
+  }, [currentUser, socket]);
+
   useEffect(() => {
     const getUser = async () => {
       const res = await api.get(`/user/${currentUser.user._id}`);
@@ -20,13 +34,24 @@ function App() {
     };
     getUser();
   }, [currentUser]);
+
+  console.log(user);
   return (
     <Routes>
-      <Route path="/" element={<Home user={user} />} />
+      <Route path="/" element={<Home user={user} socket={socket} />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route
+        path="/user/:userId"
+        element={
+          <div className="flex h-full">
+            <Sidebar user={user} />
+            <Profile user={user} />
+          </div>
+        }
+      />
       <Route
         path="/message"
         element={

@@ -4,7 +4,7 @@
 }
 
 .sidebar-closed {
-    width: 105px;
+    width: 102px;
     animation: Close ease-in .4s;
 }
 

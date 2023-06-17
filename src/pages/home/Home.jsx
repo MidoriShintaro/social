@@ -2,31 +2,19 @@ import "./Home.css";
 import SideBar from "../../components/sidebar/SideBar";
 import Feed from "../../components/feed/Feed";
 import RightBar from "../../components/rightbar/RightBar";
-import { useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/context";
 import Comment from "../../components/modal/comment/Comment";
 import Post from "../../components/modal/post/Post";
 import Create from "../../components/modal/create/Create";
 
-export default function Home({ user }) {
+export default function Home({ user, socket }) {
   const { currentUser } = useContext(AuthContext);
-  const [socket, setSocket] = useState(null);
   const [isShowPost, setIsShowPost] = useState(false);
   const [isShowOptionPost, setIsShowOptionPost] = useState(false);
   const [isShowCreatePost, setIsShowCreatePost] = useState(false);
   const [getUpdate, setGetUpdate] = useState(false);
   const [getData, setGetData] = useState({});
-  useEffect(() => {
-    setSocket(io("http://localhost:4000"));
-  }, []);
-
-  useEffect(() => {
-    socket?.emit("sendUser", currentUser.user._id);
-    socket?.on("getUser", (users) => {
-      console.log(users);
-    });
-  }, [currentUser, socket]);
 
   const showPost = (data) => {
     setIsShowPost(data);

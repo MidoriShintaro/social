@@ -13,10 +13,12 @@ import { format } from "timeago.js";
 import { AuthContext } from "../../context/context";
 import axios from "../../axios/axios";
 import api from "../../axios/axios";
+import { toast } from "react-toastify";
 
 export default function Post({ post, socket, showPost, showOptionPost, data }) {
   const { currentUser } = useContext(AuthContext);
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
+  const [content, setContent] = useState("");
   const [like, setLike] = useState(post.likes.length);
   const [isLike, setIsLike] = useState(false);
 
@@ -24,11 +26,41 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
     setIsLike(post.likes.includes(currentUser.user._id));
   }, [post, currentUser]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await api.post("/comment", {
+      userId: currentUser.user._id,
+      postId: post._id,
+      content,
+    });
+    const body = {
+      receiverId: post.userId._id,
+      id: post._id,
+      content: `${currentUser.user.username} comment your post`,
+    };
+    if (res.data.status === "success") {
+      toast.success(res.data.message);
+      setContent("");
+      if (post.userId._id !== currentUser.user._id) {
+        socket.emit("sendNotification", {
+          ...body,
+          userId: currentUser.user,
+          type: "comment",
+        });
+        await api.post("/notification", {
+          ...body,
+          userId: currentUser.user._id,
+          type: "post",
+        });
+      }
+    }
+  };
+
   const handleLike = async () => {
     const res = await axios.patch(`/post/${post._id}/like`, {
       userId: currentUser.user._id,
     });
-    const data = {
+    const body = {
       receiverId: post.userId._id,
       id: post._id,
       content: `${currentUser.user.username} like your post`,
@@ -37,12 +69,12 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
       if (res.data.message.startsWith("Like")) {
         if (post.userId._id !== currentUser.user._id) {
           socket.emit("sendNotification", {
-            ...data,
+            ...body,
             userId: currentUser.user,
             type: "likePost",
           });
           await api.post("/notification", {
-            ...data,
+            ...body,
             userId: currentUser.user._id,
             type: "post",
           });
@@ -128,13 +160,28 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
             View {post.comments.length} comments
           </span>
         </div>
-        <div className="post-footer-comment flex justify-between items-center my-2 text-sm">
-          <form action="" method="post" className="w-full">
+        <div className="post-footer-comment my-2 text-sm">
+          <form
+            onSubmit={handleSubmit}
+            action=""
+            method="post"
+            className="w-full flex justify-between items-center"
+          >
             <input
               type="text"
               className="outline-none w-full"
               placeholder="Add a comment..."
+              onChange={(e) => setContent(e.target.value)}
+              value={content}
             />
+            {content && (
+              <button
+                type="submit"
+                className="font-semibold text-sm text-blue-400 cursor-pointer"
+              >
+                Send
+              </button>
+            )}
           </form>
         </div>
       </div>

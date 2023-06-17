@@ -16,6 +16,7 @@ import Notification from "../notification/Notification";
 const Sidebar = ({ user, socket, showCreatePost, update }) => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
   const [typeSideBar, setTypeSideBar] = useState("");
+  const [showMore, setShowMore] = useState(false);
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
@@ -128,7 +129,7 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
                   </span>
                 </div>
               </li>
-              <Link to="/profile">
+              <Link to={`/user/${user?._id}`}>
                 <li className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item">
                   <div className="flex items-center p-2 text-gray-900 rounded-lg">
                     <img
@@ -151,6 +152,7 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
                   <FontAwesomeIcon
                     icon={faBars}
                     className="text-2xl sidebar-icon"
+                    onClick={() => setShowMore(!showMore)}
                   />
                   <span
                     className={isOpenSideBar === false ? "ml-12" : "opacity-0"}
@@ -167,7 +169,7 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
       {isOpenSideBar === true && typeSideBar === "notification" && (
         <Notification socket={socket} />
       )}
-      <More />
+      {showMore && <More />}
     </div>
   );
 };

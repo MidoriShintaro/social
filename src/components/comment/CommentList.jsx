@@ -29,7 +29,7 @@ export default function CommentList({ comment, user, socket }) {
     if (res.data.status === "success") {
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
   };
 

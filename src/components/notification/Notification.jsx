@@ -55,7 +55,13 @@ export default function Notification({ socket }) {
             <div key={not._id}>
               {new Date(not.createdAt).getMonth() + 1 === thisMonth &&
                 new Date(not.createdAt).getFullYear() === thisYear && (
-                  <Link to={`/${not.type}/${not.id}`}>
+                  <Link
+                    to={
+                      not.type === "post"
+                        ? `/user/${not.userId._id}/post/${not.id}`
+                        : `/user/${not.id}`
+                    }
+                  >
                     <li
                       key={i}
                       className="flex px-4 py-3 justify-between items-center hover:bg-gray-200 hover:cursor-pointer"
