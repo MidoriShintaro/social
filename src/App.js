@@ -11,6 +11,7 @@ import { AuthContext } from "./context/context";
 import api from "./axios/axios";
 import { io } from "socket.io-client";
 import Profile from "./pages/profile/Profile";
+import Post from "./pages/post/Post";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -43,6 +44,15 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route
+        path="/user/:userId/post/:postId"
+        element={
+          <div className="flex h-full">
+            <Sidebar user={user} />
+            <Post user={user} />
+          </div>
+        }
+      />
       <Route
         path="/user/:userId"
         element={
