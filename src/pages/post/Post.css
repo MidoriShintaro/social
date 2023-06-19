@@ -3,23 +3,17 @@
     z-index: 100;
 }
 
-.post-comment {
-    height: 500px;
-}
 
 .post-comment-footer-timeline span {
     font-size: 12px;
 }
 
-.post-comment-content {
-    height: 100%;
-}
-
 .post-comment-body-content {
-    height: 271px;
+    height: 242px;
 }
 
 .post-comment-img,
 .post-comment-content {
     width: 500px;
+    height: 500px;
 }
