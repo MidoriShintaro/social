@@ -11,7 +11,6 @@ export interface IUser {
   googleId: string;
   facebookId: string;
   isAdmin: boolean;
-  relationship: number;
   posts: Types.Array<string>;
 }
 
@@ -27,7 +26,6 @@ const UserSchema = new Schema<IUser>(
     isAdmin: { type: Boolean, default: false },
     googleId: { type: String },
     facebookId: { type: String },
-    relationship: { type: Number, enum: [1, 2, 3] },
     posts: [{ type: String, default: [], ref: "Post" }],
   },
   { timestamps: true }

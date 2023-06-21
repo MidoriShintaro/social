@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Conversation from "../models/Conversation";
 import HandleError from "../utils/HandleError";
+import User from "../models/User";
 
 export const newConversation = async (
   req: Request,
@@ -8,7 +9,16 @@ export const newConversation = async (
   next: NextFunction
 ) => {
   const { senderId, receiverId } = req.body;
-  const newConversation = new Conversation({ members: [senderId, receiverId] });
+  const sender = await User.findById(senderId);
+  const receiver = await User.findById(receiverId);
+  if (!sender || !receiver) return next(new HandleError("Not found user", 404));
+  const existsConversation = await Conversation.findOne({
+    members: { $all: [sender._id, receiver._id] },
+  });
+  if (existsConversation) return next();
+  const newConversation = new Conversation({
+    members: [sender._id, receiver._id],
+  });
   const conversation = await newConversation.save();
   res.status(201).json({
     status: "success",

@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import HandleError from "../utils/HandleError";
+import configMulter from "../utils/multer";
+
+const upload = configMulter("users");
+export const uploadAvatar = upload.single("picturePhoto");
 
 export const getAllUser = async (
   req: Request,
@@ -8,10 +12,6 @@ export const getAllUser = async (
   next: NextFunction
 ) => {
   const limit = req.query.limit as string;
-  // if (req.query) {
-  // } else {
-  //   users = await User.find().select("-password");
-  // }
   const users = await User.find().limit(parseInt(limit)).select("-password");
   if (!users || users.length === 0)
     return next(new HandleError("No Founded User", 404));
@@ -38,9 +38,16 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  if (req.body.id !== id)
-    return next(new HandleError("You does not permission", 403));
-  await User.findByIdAndUpdate(id, req.body, { new: true }).select("-password");
+  const picturePhoto =
+    req.file === undefined ? req.body.picturePhoto : req.file.filename;
+  const { email, username, fullname } = req.body;
+  const user = await User.findById(id);
+  if (!user) return next(new HandleError("Cannot find user", 404));
+  await User.findByIdAndUpdate(
+    id,
+    { email, username, fullname, picturePhoto },
+    { new: true }
+  ).select("-password");
   res.status(200).json({
     status: "success",
     message: "Profile has been update",

@@ -57,7 +57,7 @@ export const getPost = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const post = await Post.findById(id);
+  const post = await Post.findById(id).populate({ path: "userId" });
   if (!post) return next(new HandleError("Cannot find post with id", 404));
 
   res.status(200).json({
