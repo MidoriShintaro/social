@@ -20,7 +20,7 @@ import NoMessage from "../../components/noMessage/NoMessage";
 import { io } from "socket.io-client";
 import { sha256 } from "crypto-hash";
 
-export default function Message() {
+export default function Message({user}) {
   const [conversation, setConversation] = useState([]);
   const [chat, setChat] = useState({});
   const [messages, setMessage] = useState([]);
@@ -35,7 +35,7 @@ export default function Message() {
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const { currentUser } = useContext(AuthContext);
-  const { user } = currentUser;
+  // const { user } = currentUser;
   const socketRef = useRef();
   const socketURL = "http://localhost:4000";
   const friendId =

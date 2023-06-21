@@ -42,7 +42,6 @@ export default function SuggestUser({ user, socket }) {
       res.data.status === "success" &&
       res.data.message.startsWith("UnFollow")
     ) {
-      await api.delete();
       setIsFollow(false);
     }
   };

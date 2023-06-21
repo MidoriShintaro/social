@@ -2,14 +2,12 @@ import "./Home.css";
 import SideBar from "../../components/sidebar/SideBar";
 import Feed from "../../components/feed/Feed";
 import RightBar from "../../components/rightbar/RightBar";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/context";
+import { useState } from "react";
 import Comment from "../../components/modal/comment/Comment";
-import Post from "../../components/modal/post/Post";
+import OptionPost from "../../components/modal/optionPost/OptionPost";
 import Create from "../../components/modal/create/Create";
 
 export default function Home({ user, socket }) {
-  const { currentUser } = useContext(AuthContext);
   const [isShowPost, setIsShowPost] = useState(false);
   const [isShowOptionPost, setIsShowOptionPost] = useState(false);
   const [isShowCreatePost, setIsShowCreatePost] = useState(false);
@@ -42,7 +40,7 @@ export default function Home({ user, socket }) {
         <Comment showPost={showPost} data={getData} socket={socket} />
       )}
       {isShowOptionPost && (
-        <Post
+        <OptionPost
           showOptionPost={showOptionPost}
           showCreatePost={showCreatePost}
           update={handleGetUpdate}
@@ -51,7 +49,7 @@ export default function Home({ user, socket }) {
       {isShowCreatePost && (
         <Create
           data={getData}
-          user={currentUser.user}
+          user={user}
           showCreatePost={showCreatePost}
           update={getUpdate}
         />

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 // import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import api from "../../axios/axios";
 import "./Search.css";
+import { Link } from "react-router-dom";
 
 export default function Search() {
   const [listUser, setListUser] = useState([]);
@@ -42,24 +43,26 @@ export default function Search() {
         <ul className="list-none">
           {findUser ? (
             searchUser(listUser).map((user) => (
-              <li
-                key={user._id}
-                className="flex px-4 py-3 justify-between items-center hover:bg-gray-200 hover:cursor-pointer"
-              >
-                <div className="rightbar-suggestion-user-info flex items-center">
-                  <img
-                    src={photo + "/users/" + user.picturePhoto}
-                    alt=""
-                    className="rounded-full w-10 h-10"
-                    width="40"
-                    height="40"
-                  />
-                  <div className="rightbar-suggestion-user-info-text ml-2">
-                    <p className="font-bold text-sm">{user.username}</p>
-                    <p className="text-xs text-gray-400">{user.fullname}</p>
+              <Link to={`/user/${user._id}`}>
+                <li
+                  key={user._id}
+                  className="flex px-4 py-3 justify-between items-center hover:bg-gray-200 hover:cursor-pointer"
+                >
+                  <div className="rightbar-suggestion-user-info flex items-center">
+                    <img
+                      src={photo + "/users/" + user.picturePhoto}
+                      alt=""
+                      className="rounded-full w-10 h-10"
+                      width="40"
+                      height="40"
+                    />
+                    <div className="rightbar-suggestion-user-info-text ml-2">
+                      <p className="font-bold text-sm">{user.username}</p>
+                      <p className="text-xs text-gray-400">{user.fullname}</p>
+                    </div>
                   </div>
-                </div>
-              </li>
+                </li>
+              </Link>
             ))
           ) : (
             <p className="text-center font-semibold text-gray-400 mt-32">

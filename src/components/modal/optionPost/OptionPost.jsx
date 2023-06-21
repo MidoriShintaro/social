@@ -1,6 +1,6 @@
-import "./Post.css";
+import "./OptionPost.css";
 
-export default function Post({ showOptionPost, showCreatePost, update }) {
+export default function OptionPost({ showOptionPost, showCreatePost, update }) {
   const handleClick = () => {
     showOptionPost(false);
   };

@@ -12,11 +12,15 @@ import api from "./axios/axios";
 import { io } from "socket.io-client";
 import Profile from "./pages/profile/Profile";
 import Post from "./pages/post/Post";
+import ModalProfile from "./components/modal/profile/ModalProfile";
+import NotFound from "./pages/notFound/NotFound";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = useState({});
   const [socket, setSocket] = useState(null);
+  const [isShowModalProfile, setIsShowModalProfile] = useState(false);
+  const [data, setData] = useState({});
   useEffect(() => {
     setSocket(io("http://localhost:4000"));
   }, []);
@@ -35,8 +39,12 @@ function App() {
     };
     getUser();
   }, [currentUser]);
+  
+  const show = (bool, data) => {
+    setIsShowModalProfile(bool);
+    setData(data);
+  };
 
-  console.log(user);
   return (
     <Routes>
       <Route path="/" element={<Home user={user} socket={socket} />} />
@@ -49,17 +57,20 @@ function App() {
         element={
           <div className="flex h-full">
             <Sidebar user={user} />
-            <Post user={user} />
+            <Post user={user} socket={socket} />
           </div>
         }
       />
       <Route
         path="/user/:userId"
         element={
-          <div className="flex h-full">
-            <Sidebar user={user} />
-            <Profile user={user} />
-          </div>
+          <>
+            {isShowModalProfile && <ModalProfile show={show} data={data} />}
+            <div className="flex h-full">
+              <Sidebar user={user} />
+              <Profile current={user} show={show} socket={socket} />
+            </div>
+          </>
         }
       />
       <Route
@@ -67,10 +78,11 @@ function App() {
         element={
           <div className="flex h-full">
             <Sidebar user={user} />
-            <Message />
+            <Message user={user} />
           </div>
         }
       />
+      <Route path="*" element={<NotFound/>} />
     </Routes>
   );
 }

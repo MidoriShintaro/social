@@ -4,16 +4,14 @@ import {
   faHeart as faHeartRe,
   faComment,
 } from "@fortawesome/free-regular-svg-icons";
-import {
-  faEllipsis,
-  faHeart as faHeartSo,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faHeart as faHeartSo } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { format } from "timeago.js";
 import { AuthContext } from "../../context/context";
 import axios from "../../axios/axios";
 import api from "../../axios/axios";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export default function Post({ post, socket, showPost, showOptionPost, data }) {
   const { currentUser } = useContext(AuthContext);
@@ -88,19 +86,21 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
   return (
     <div className="post m-auto px-8 w-4/5">
       <div className="post-title flex justify-between items-center">
-        <div className="post-title-user flex items-center my-4">
-          <img
-            src={photo + "/users/" + post.userId.picturePhoto}
-            alt=""
-            className="rounded-full border-2 object-cover w-10 h-10"
-          />
-          <span className="mx-3 font-semibold text-black">
-            {post.userId.username}
-          </span>
-          <span className="text-gray-400 font-semibold text-sm">
-            {format(post.createdAt)}
-          </span>
-        </div>
+        <Link to={`/user/${post.userId._id}`}>
+          <div className="post-title-user flex items-center my-4">
+            <img
+              src={photo + "/users/" + post.userId.picturePhoto}
+              alt=""
+              className="rounded-full border-2 object-cover w-10 h-10"
+            />
+            <span className="mx-3 font-semibold text-black">
+              {post.userId.username}
+            </span>
+            <span className="text-gray-400 font-semibold text-sm">
+              {format(post.createdAt)}
+            </span>
+          </div>
+        </Link>
         <div className="post-title-more mr-1 hover:cursor-pointer hover:text-gray-300">
           <FontAwesomeIcon
             icon={faEllipsis}
@@ -135,6 +135,10 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
                 icon={faComment}
                 flip="horizontal"
                 className="hover:cursor-pointer"
+                onClick={() => {
+                  showPost(true);
+                  data(post);
+                }}
               />
             </div>
           </div>

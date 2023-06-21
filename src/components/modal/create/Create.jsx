@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Create({ user, showCreatePost, data, update }) {
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [description, setDescription] = useState("");
-  const [content, setContent] = useState("");
+  const [description, setDescription] = useState(data.desc);
+  const [content, setContent] = useState(data.content);
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const negative = useNavigate();
@@ -49,11 +49,13 @@ export default function Create({ user, showCreatePost, data, update }) {
       toast.error("Please enter full information");
       return;
     }
+    const contentData = content === "" ? data.content : content;
+    const descriptionData = description === "" ? data.desc : description;
     const img = image === "" ? data.img : image;
     const formData = new FormData();
     formData.append("userId", user._id);
-    formData.append("content", content);
-    formData.append("desc", description);
+    formData.append("content", contentData);
+    formData.append("desc", descriptionData);
     formData.append("img", img);
     const res = await api.patch(`/post/${data._id}`, formData);
     if (res.data.status === "success") {

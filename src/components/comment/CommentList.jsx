@@ -105,7 +105,7 @@ export default function CommentList({ comment, user, socket }) {
               className="text-sm ml-4 mr-2 hover:cursor-pointer"
               onClick={handleLikeComment}
             />
-            <span className="text-gray-400 text-sm">{likeComment} likes</span>
+            <span className="text-gray-400 w-10 text-sm">{likeComment} likes</span>
             {comment.userId._id === user._id && (
               <FontAwesomeIcon
                 icon={faEllipsis}

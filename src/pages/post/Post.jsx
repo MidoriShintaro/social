@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom";
 import api from "../../axios/axios";
 import { format } from "timeago.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as faHeartSo } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faHeart as faHeartSo } from "@fortawesome/free-solid-svg-icons";
 import {
   faComment,
   faHeart as faHeartRe,
 } from "@fortawesome/free-regular-svg-icons";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Post({ user, socket }) {
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -18,9 +18,9 @@ export default function Post({ user, socket }) {
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
   const [isLikePost, setIsLikePost] = useState(false);
-  const [like, setLike] = useState(post.likes?.length);
   const [content, setContent] = useState("");
   const [arrivalComment, setArrivalComment] = useState(null);
+  const [like, setLike] = useState(post.likes?.length);
 
   console.log(like);
 
@@ -29,7 +29,7 @@ export default function Post({ user, socket }) {
   }, [post, user]);
 
   useEffect(() => {
-    socket.on("getComment", (data) => {
+    socket?.on("getComment", (data) => {
       setArrivalComment({
         content: data.content,
         postId: data.postId,
@@ -75,7 +75,7 @@ export default function Post({ user, socket }) {
     if (res.data.status === "success") {
       if (res.data.message.startsWith("Like")) {
         if (post.userId._id !== user._id) {
-          socket.emit("sendNotification", {
+          socket?.emit("sendNotification", {
             ...sendData,
             userId: user,
             type: "likePost",
@@ -115,7 +115,7 @@ export default function Post({ user, socket }) {
       res.data.comment.userId = user;
       toast.success(res.data.message);
       if (user._id !== post.userId._id) {
-        socket.emit("sendNotification", {
+        socket?.emit("sendNotification", {
           ...body,
           userId: user,
           type: "comment",
@@ -133,7 +133,7 @@ export default function Post({ user, socket }) {
   };
 
   return (
-    <div className="backdrop-comment w-full h-full mt-16">
+    <div className="backdrop-comment w-3/4 h-full mt-12 mx-1 p-6">
       <div className="post-comment flex justify-center items-center h-full">
         <div className="post-comment-img w-1/2">
           <img
@@ -153,6 +153,9 @@ export default function Post({ user, socket }) {
               <span className="mx-3 font-semibold text-black hover:text-gray-400">
                 {post.userId?.username}
               </span>
+            </div>
+            <div className="comment-title-more mr-4 hover:cursor-pointer hover:text-gray-300">
+              <FontAwesomeIcon icon={faEllipsis} />
             </div>
           </div>
           <div className="post-comment-body">
@@ -209,7 +212,7 @@ export default function Post({ user, socket }) {
                     />
                   </div>
                   <div className="mx-2">
-                    <FontAwesomeIcon icon={faComment} flip="horizontal " />
+                    <FontAwesomeIcon icon={faComment} flip="horizontal" />
                   </div>
                 </div>
               </div>
@@ -233,6 +236,8 @@ export default function Post({ user, socket }) {
                   type="text"
                   className="outline-none w-full"
                   placeholder="Add a comment..."
+                  onChange={(e) => setContent(e.target.value)}
+                  value={content}
                 />
                 <div className="add-comment">
                   <button
@@ -247,6 +252,7 @@ export default function Post({ user, socket }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
