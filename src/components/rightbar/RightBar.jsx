@@ -3,6 +3,7 @@ import "./RightBar.css";
 import { AuthContext } from "../../context/context";
 import api from "../../axios/axios";
 import SuggestUser from "../suggestUser/SuggestUser";
+import { logout } from "../../services/authServices";
 
 export default function RightBar({ user, socket }) {
   const photo = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -44,7 +45,12 @@ export default function RightBar({ user, socket }) {
             </div>
           </div>
           <div className="rightbar-switch-user">
-            <p className="text-sm text-blue-500 font-medium hover:cursor-pointer">
+            <p
+              className="text-sm text-blue-500 font-medium hover:cursor-pointer"
+              onClick={() => {
+                logout();
+              }}
+            >
               Switch
             </p>
           </div>

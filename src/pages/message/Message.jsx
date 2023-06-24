@@ -20,7 +20,7 @@ import NoMessage from "../../components/noMessage/NoMessage";
 import { io } from "socket.io-client";
 import { sha256 } from "crypto-hash";
 
-export default function Message({user}) {
+export default function Message({ user }) {
   const [conversation, setConversation] = useState([]);
   const [chat, setChat] = useState({});
   const [messages, setMessage] = useState([]);
@@ -37,7 +37,7 @@ export default function Message({user}) {
   const { currentUser } = useContext(AuthContext);
   // const { user } = currentUser;
   const socketRef = useRef();
-  const socketURL = "http://localhost:4000";
+  const socketURL = process.env.SOCKET_URL;
   const friendId =
     chat?.members?.find((f) => f !== user._id) === undefined
       ? ""
@@ -70,7 +70,7 @@ export default function Message({user}) {
         createdAt: Date.now(),
       });
     });
-  }, []);
+  }, [socketURL]);
 
   useEffect(() => {
     setIsLiked(chat?.likes?.includes(user?._id));
