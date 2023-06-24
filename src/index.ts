@@ -21,6 +21,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const urlClient = process.env.URL_CLIENT;
 
 //config socket
 initSocket();
@@ -35,14 +36,14 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(helmet());
 app.use(
   cors({
-    origin: "https://social-midorishintaro.vercel.app/",
+    origin: urlClient,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "https://social-midorishintaro.vercel.app/");
+  res.header("Access-Control-Allow-Origin", urlClient);
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
