@@ -5,9 +5,8 @@ const CommentSchema = new mongoose_1.Schema({
     userId: { type: String, ref: "User", required: true },
     postId: { type: String, ref: "Post", required: true },
     content: { type: String, default: "" },
-    timeUp: { type: Date, default: new Date(Date.now()) },
     likes: [{ type: String, ref: "User", default: [] }],
-});
+}, { timestamps: true });
 const Comment = (0, mongoose_1.model)("Comment", CommentSchema);
 exports.default = Comment;
 //# sourceMappingURL=Comment.js.map

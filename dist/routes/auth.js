@@ -8,8 +8,9 @@ authRouter.post("/register", auth_1.register);
 authRouter.post("/login", auth_1.login);
 authRouter.post("/logout", auth_1.logout);
 authRouter.post("/forgot-password", auth_1.forgotPassword);
-authRouter.patch("/reset-password/:token", auth_1.resetPassword);
+authRouter.post("/refresh-token", auth_1.refreshToken);
 authRouter.post("/changed-password", auth_1.protect, auth_1.changedPassword);
+authRouter.patch("/reset-password/:token", auth_1.resetPassword);
 // authRouter.get(
 //   "/auth/facebook",
 //   passport.authenticate("facebook", { scope: "email" })

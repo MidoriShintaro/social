@@ -17,7 +17,12 @@ const Comment_1 = __importDefault(require("../models/Comment"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const Post_1 = __importDefault(require("../models/Post"));
 const getAllComments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const comments = yield Comment_1.default.find();
+    const comments = yield Comment_1.default.find()
+        .populate({
+        path: "userId",
+        select: "-password",
+    })
+        .populate({ path: "postId" });
     if (!comments || comments.length === 0)
         return next(new HandleError_1.default("No Comment Founded", 404));
     res.status(200).json({
@@ -39,6 +44,7 @@ const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     res.status(201).json({
         status: "success",
         message: "Comment has been posted",
+        comment: newComment,
     });
 });
 exports.createComment = createComment;
@@ -73,12 +79,9 @@ const updateComment = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.updateComment = updateComment;
 const deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { userId, postId } = req.body;
     const comment = yield Comment_1.default.findById(id);
     if (!comment)
         return next(new HandleError_1.default("Cannot find comment with id", 404));
-    if (comment.userId !== userId || comment.postId !== postId)
-        return next(new HandleError_1.default("You does not permission", 403));
     yield Post_1.default.findByIdAndUpdate(comment.postId, {
         $pull: { comments: comment.id },
     }, { new: true });

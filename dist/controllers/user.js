@@ -12,11 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Follow = exports.deleteUser = exports.updateUser = exports.getUser = exports.getAllUser = void 0;
+exports.Follow = exports.deleteUser = exports.updateUser = exports.getUser = exports.getAllUser = exports.uploadAvatar = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
+const multer_1 = __importDefault(require("../utils/multer"));
+const upload = (0, multer_1.default)("users");
+exports.uploadAvatar = upload.single("picturePhoto");
 const getAllUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield User_1.default.find().select("-password");
+    const limit = req.query.limit;
+    const users = yield User_1.default.find().limit(parseInt(limit)).select("-password");
     if (!users || users.length === 0)
         return next(new HandleError_1.default("No Founded User", 404));
     res.status(200).json({ status: "success", users });
@@ -35,9 +39,12 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.getUser = getUser;
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    if (req.body.id !== id)
-        return next(new HandleError_1.default("You does not permission", 403));
-    yield User_1.default.findByIdAndUpdate(id, req.body, { new: true }).select("-password");
+    const picturePhoto = req.file === undefined ? req.body.picturePhoto : req.file.filename;
+    const { email, username, fullname } = req.body;
+    const user = yield User_1.default.findById(id);
+    if (!user)
+        return next(new HandleError_1.default("Cannot find user", 404));
+    yield User_1.default.findByIdAndUpdate(id, { email, username, fullname, picturePhoto }, { new: true }).select("-password");
     res.status(200).json({
         status: "success",
         message: "Profile has been update",
@@ -69,6 +76,9 @@ const Follow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
             yield User_1.default.findByIdAndUpdate(curUser.id, {
                 $push: { followings: user._id },
             }, { new: true });
+            res
+                .status(200)
+                .json({ status: "success", message: `Follow ${user.username}` });
         }
         else {
             yield User_1.default.findByIdAndUpdate(user.id, {
@@ -77,8 +87,10 @@ const Follow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
             yield User_1.default.findByIdAndUpdate(curUser.id, {
                 $pull: { followings: user._id },
             }, { new: true });
+            res
+                .status(200)
+                .json({ status: "success", message: `UnFollow ${user.username}` });
         }
-        res.status(200).json({ status: "success" });
     }
 });
 exports.Follow = Follow;

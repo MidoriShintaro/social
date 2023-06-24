@@ -65,7 +65,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     const { email, password } = req.body;
     if (!email || !password)
         return next(new HandleError_1.default("Invalid email or password", 400));
-    const user = yield User_1.default.findOne({ email }).select("+password");
+    const user = yield User_1.default.findOne({ email });
     if (!user || !bcrypt_1.default.compareSync(password, user.password)) {
         return next(new HandleError_1.default("Incorrect email or password", 400));
     }
@@ -82,16 +82,19 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     //   httpOnly: true,
     //   maxAge: 30 * 24 * 60 * 60 * 1000,
     // });
+    user.password = "";
     res.status(200).json({
         status: "success",
         accessToken,
         refreshToken,
+        user,
     });
 });
 exports.login = login;
 const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     let auth = req.headers.authorization;
+    const isSecure = process.env.NODE_ENV === "production";
     if (auth) {
         token = auth.split(" ")[1];
     }
@@ -105,38 +108,37 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         if (err)
             return next(new HandleError_1.default(err.message, 401));
         const { id } = decode;
-        const user = yield User_1.default.findById(id);
+        const user = yield User_1.default.findById(id).select("-password");
         // res.status(200).json({ status: "success", user });
         req.user = user;
+        res.locals.user = user;
+        res.cookie("user", user, {
+            httpOnly: false,
+            secure: isSecure,
+            expires: new Date(Date.now() + 30 * 24 * 3600000),
+        });
         next();
     }));
 });
 exports.protect = protect;
 const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const refreshToken = req.body;
+    const { refreshToken } = req.body;
     if (!refreshToken)
         return next(new HandleError_1.default("Unauthorization", 401));
-    jsonwebtoken_1.default.verify(refreshToken, refreshToken_secret, (err, payload) => {
+    jsonwebtoken_1.default.verify(refreshToken, refreshToken_secret, (err, payload) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return next(new HandleError_1.default(err.message, 401));
         const { id, isAdmin } = payload;
-        const newRefreshToken = signAccessToken({ id, isAdmin });
-        const newAccessToken = signAccessToken({ id, isAdmin });
-        // res.cookie("access_token", newAccessToken, {
-        //   httpOnly: true,
-        //   maxAge: 20 * 24 * 60 * 60 * 1000,
-        // });
-        // res.cookie("refresh_token", newRefreshToken, {
-        //   httpOnly: true,
-        //   maxAge: 30 * 24 * 60 * 60 * 1000,
-        // });
-        res.status(200).json({
+        const refreshToken = signAccessToken({ id, isAdmin });
+        const accessToken = signAccessToken({ id, isAdmin });
+        const user = yield User_1.default.findById(id).select("-password");
+        return res.status(200).json({
             status: "success",
-            refreshToken: newRefreshToken,
-            accessToken: newAccessToken,
+            user,
+            refreshToken,
+            accessToken,
         });
-    });
-    next();
+    }));
 });
 exports.refreshToken = refreshToken;
 const logout = (req, res, next) => {

@@ -12,28 +12,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Timeline = exports.LikePost = exports.deletePost = exports.updatePost = exports.getPost = exports.createPost = exports.getAllPost = void 0;
+exports.Timeline = exports.LikePost = exports.deletePost = exports.updatePost = exports.getPost = exports.createPost = exports.getAllPost = exports.uploadPostImage = void 0;
 const Post_1 = __importDefault(require("../models/Post"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const User_1 = __importDefault(require("../models/User"));
+const multer_1 = __importDefault(require("../utils/multer"));
+const upload = (0, multer_1.default)("posts");
+exports.uploadPostImage = upload.single("img");
 const getAllPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const posts = yield Post_1.default.find().populate({
         path: "userId",
         select: "-password",
     });
+    const postData = posts.reverse();
     if (!posts || posts.length === 0)
         return next(new HandleError_1.default("No Post Founded", 404));
     res.status(200).json({
         status: "success",
-        posts,
+        posts: postData,
     });
 });
 exports.getAllPost = getAllPost;
 const createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.body;
+    var _a;
+    const img = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.filename) === undefined ? "" : req.file.filename;
+    const { userId, content, desc } = req.body;
     if (!userId)
         return next(new HandleError_1.default("User Id must have required", 400));
-    const newPost = yield Post_1.default.create(req.body);
+    const newPost = yield Post_1.default.create({
+        userId,
+        content,
+        desc,
+        img,
+    });
     if (!newPost)
         return next(new HandleError_1.default("Cannot create post", 400));
     yield User_1.default.findByIdAndUpdate(newPost.userId, { $push: { posts: newPost._id } }, { new: true });
@@ -45,7 +56,7 @@ const createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.createPost = createPost;
 const getPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const post = yield Post_1.default.findById(id);
+    const post = yield Post_1.default.findById(id).populate({ path: "userId" });
     if (!post)
         return next(new HandleError_1.default("Cannot find post with id", 404));
     res.status(200).json({
@@ -56,12 +67,13 @@ const getPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.getPost = getPost;
 const updatePost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    const img = req.file === undefined ? req.body.img : req.file.filename;
+    const { userId, content, desc } = req.body;
+    console.log(req.body);
     const post = yield Post_1.default.findById(id);
     if (!post)
         return next(new HandleError_1.default("Cannot find post with id", 404));
-    if (post.userId !== req.body.userId)
-        return next(new HandleError_1.default("You does not permission", 403));
-    yield Post_1.default.findByIdAndUpdate(id, req.body, { new: true });
+    yield Post_1.default.findByIdAndUpdate(post._id, { userId, content, desc, img }, { new: true });
     res.status(200).json({ status: "success", message: "Post has been updated" });
 });
 exports.updatePost = updatePost;
@@ -70,9 +82,8 @@ const deletePost = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     const post = yield Post_1.default.findById(id);
     if (!post)
         return next(new HandleError_1.default("Cannot find post with id", 404));
-    if (post.userId !== req.body.userId)
-        return next(new HandleError_1.default("You does not permission", 403));
     yield User_1.default.findByIdAndUpdate(post.userId, { $pull: { posts: post._id } }, { new: true });
+    yield Post_1.default.findByIdAndDelete(post._id);
     res.status(200).json({
         status: "success",
         message: "Post has been deleted",

@@ -12,7 +12,6 @@ const UserSchema = new mongoose_1.Schema({
     isAdmin: { type: Boolean, default: false },
     googleId: { type: String },
     facebookId: { type: String },
-    relationship: { type: Number, enum: [1, 2, 3] },
     posts: [{ type: String, default: [], ref: "Post" }],
 }, { timestamps: true });
 // UserSchema.pre("save", function (next) {
