@@ -143,7 +143,7 @@ export const refreshToken = async (
       const refreshToken = signAccessToken({ id, isAdmin });
       const accessToken = signAccessToken({ id, isAdmin });
       const user = await User.findById(id).select("-password");
-      res.status(200).json({
+      return res.status(200).json({
         status: "success",
         user,
         refreshToken,
@@ -151,7 +151,6 @@ export const refreshToken = async (
       });
     }
   );
-  next();
 };
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {

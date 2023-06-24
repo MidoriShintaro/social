@@ -74,6 +74,7 @@ export const updatePost = async (
   const { id } = req.params;
   const img = req.file === undefined ? req.body.img : req.file.filename;
   const { userId, content, desc } = req.body;
+  console.log(req.body);
   const post = await Post.findById(id);
   if (!post) return next(new HandleError("Cannot find post with id", 404));
   await Post.findByIdAndUpdate(
@@ -92,13 +93,12 @@ export const deletePost = async (
   const { id } = req.params;
   const post = await Post.findById(id);
   if (!post) return next(new HandleError("Cannot find post with id", 404));
-  if (post.userId !== req.body.userId)
-    return next(new HandleError("You does not permission", 403));
   await User.findByIdAndUpdate(
     post.userId,
     { $pull: { posts: post._id } },
     { new: true }
   );
+  await Post.findByIdAndDelete(post._id);
   res.status(200).json({
     status: "success",
     message: "Post has been deleted",
