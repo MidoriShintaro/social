@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node-dev src/index.ts && ts-node-dev src/socket/socket.ts",
-    "prod": "tsc && node ./dist/index.js && node ./dist/socket/socket.js"
+    "prod": "node ./dist/index.js && node ./dist/socket/socket.js"
   },
   "keywords": [],
   "author": "",
