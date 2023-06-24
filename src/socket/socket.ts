@@ -13,7 +13,10 @@ interface ClientToServer {
 
 const server = createServer();
 const io: Server = new Server<ServerToClient, ClientToServer>(server, {
-  cors: { origin: "http://localhost:3000", credentials: true },
+  cors: {
+    origin: "https://social-midorishintaro.vercel.app/",
+    credentials: true,
+  },
 });
 const port = process.env.SOCKET_PORT || 4000;
 
