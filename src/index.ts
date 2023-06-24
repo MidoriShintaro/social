@@ -35,14 +35,14 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://social-midorishintaro.vercel.app/",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
 app.use(cookieParser());
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "https://social-midorishintaro.vercel.app/");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
