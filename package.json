@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm install && tsc",
     "start": "ts-node-dev src/index.ts && ts-node-dev src/socket/socket.ts",
     "prod": "node ./dist/index.js && node ./dist/socket/socket.js"
   },
