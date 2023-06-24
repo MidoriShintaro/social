@@ -24,7 +24,7 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
       <div
         className={`${
           isOpenSideBar === false ? "w-64 sidebar-open" : "sidebar-closed"
-        } fixed top-0 left-0 z-40 h-screen transition-transform sm:translate-x-0 border`}
+        } fixed top-0 left-0 z-10 h-screen transition-transform sm:translate-x-0 border`}
       >
         <div className="h-full px-3 py-4">
           <div className="sidebar-logo my-8">
