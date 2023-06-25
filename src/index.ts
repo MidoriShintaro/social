@@ -42,15 +42,15 @@ app.use(
   })
 );
 app.use(cookieParser());
-// app.use((req: Request, res: Response, next: NextFunction) => {
-//   // res.header("Access-Control-Allow-Origin", urlClient);
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // res.header("Access-Control-Allow-Origin", urlClient);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 // app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(
