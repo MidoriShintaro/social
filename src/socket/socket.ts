@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 
+const urlClient = process.env.URL_CLIENT;
+
 interface ServerToClient {
   getUser: () => void;
   getMessage: ({ senderId, content }: any) => void;
@@ -14,7 +16,7 @@ interface ClientToServer {
 const server = createServer();
 const io: Server = new Server<ServerToClient, ClientToServer>(server, {
   cors: {
-    origin: "https://social-midorishintaro.vercel.app/",
+    origin: urlClient,
     credentials: true,
   },
 });
