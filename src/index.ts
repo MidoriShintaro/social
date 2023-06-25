@@ -21,7 +21,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const urlClient = process.env.URL_CLIENT;
+const urlClient = process.env.URL_CLIENT as string;
 
 //config socket
 initSocket();
@@ -44,7 +44,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", urlClient);
   // another common pattern
   // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
   res.setHeader(
