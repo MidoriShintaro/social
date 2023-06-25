@@ -8,7 +8,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const configMulter = (destination) => {
     const storage = multer_1.default.diskStorage({
         destination(req, file, callback) {
-            callback(null, `src/public/${destination}`);
+            callback(null, `dist/public/${destination}`);
         },
         filename(req, file, callback) {
             const ext = file.originalname.split(".")[1];
