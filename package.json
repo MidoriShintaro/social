@@ -54,5 +54,5 @@
     "passport-google-oauth2": "^0.2.0",
     "socket.io": "^4.6.1"
   },
-  "proxy": "https://social-eight-lac.vercel.app/"
+  "proxy": "https://social-midorishintaro.vercel.app/"
 }
