@@ -22,6 +22,7 @@ const socket_1 = __importDefault(require("./socket/socket"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
+const urlClient = process.env.URL_CLIENT;
 //config socket
 (0, socket_1.default)();
 //connect db
@@ -32,13 +33,13 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.static(path_1.default.join(__dirname, "/public")));
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: urlClient,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
 app.use((0, cookie_parser_1.default)());
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Origin", urlClient);
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
