@@ -21,9 +21,10 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [isShowModalProfile, setIsShowModalProfile] = useState(false);
   const [data, setData] = useState({});
+  const socketURL = process.env.SOCKET_URL;
   useEffect(() => {
-    setSocket(io("http://localhost:4000"));
-  }, []);
+    setSocket(io(socketURL));
+  }, [socketURL]);
 
   useEffect(() => {
     socket?.emit("sendUser", currentUser.user._id);
@@ -39,7 +40,7 @@ function App() {
     };
     getUser();
   }, [currentUser]);
-  
+
   const show = (bool, data) => {
     setIsShowModalProfile(bool);
     setData(data);
@@ -82,7 +83,7 @@ function App() {
           </div>
         }
       />
-      <Route path="*" element={<NotFound/>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
