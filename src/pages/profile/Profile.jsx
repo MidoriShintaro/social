@@ -7,13 +7,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../axios/axios";
 
 export default function Profile({ current, show, socket }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const { userId } = useParams();
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState({});
   const [isFollow, setIsFollow] = useState(false);
   const negative = useNavigate();
-
+  
   useEffect(() => {
     setIsFollow(user.followers?.includes(current?._id));
   }, [user, current]);
@@ -86,11 +85,7 @@ export default function Profile({ current, show, socket }) {
       <div className="main">
         <div className="profile">
           <div className="profile-image">
-            <img
-              src={photo + "/users/" + user.picturePhoto}
-              alt=""
-              className="w-44 h-44"
-            />
+            <img src={user.picturePhoto} alt="" className="w-44 h-44" />
           </div>
           <div className="profile-user-settings">
             <h1 className="profile-user-name">{user.username}</h1>
@@ -162,13 +157,9 @@ export default function Profile({ current, show, socket }) {
       <div className="main">
         <div className="gallery">
           {posts.map((post) => (
-            <Link to={`post/${post._id}`}>
+            <Link to={`post/${post._id}`} key={post._id}>
               <div className="gallery-item">
-                <img
-                  src={photo + "/posts/" + post.img}
-                  className="gallery-image"
-                  alt=""
-                />
+                <img src={post.img} className="gallery-image" alt="" />
                 <div className="gallery-item-info">
                   <ul>
                     <li className="gallery-item-likes">

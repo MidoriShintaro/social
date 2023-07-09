@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 
 export default function Post({ post, socket, showPost, showOptionPost, data }) {
   const { currentUser } = useContext(AuthContext);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [content, setContent] = useState("");
   const [like, setLike] = useState(post.likes.length);
   const [isLike, setIsLike] = useState(false);
@@ -89,7 +88,7 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
         <Link to={`/user/${post.userId._id}`}>
           <div className="post-title-user flex items-center my-4">
             <img
-              src={photo + "/users/" + post.userId.picturePhoto}
+              src={post.userId.picturePhoto}
               alt=""
               className="rounded-full border-2 object-cover w-10 h-10"
             />
@@ -113,7 +112,7 @@ export default function Post({ post, socket, showPost, showOptionPost, data }) {
       </div>
       <div className="post-content">
         <img
-          src={photo + "/posts/" + post.img}
+          src={post.img}
           alt=""
           className="object-cover rounded"
         />

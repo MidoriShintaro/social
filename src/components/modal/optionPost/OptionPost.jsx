@@ -1,8 +1,28 @@
+import { toast } from "react-toastify";
+import api from "../../../axios/axios";
 import "./OptionPost.css";
+import { useNavigate } from "react-router-dom";
 
-export default function OptionPost({ showOptionPost, showCreatePost, update }) {
+export default function OptionPost({
+  showOptionPost,
+  showCreatePost,
+  update,
+  data,
+}) {
+  const negative = useNavigate();
   const handleClick = () => {
     showOptionPost(false);
+  };
+
+  const handleDelete = async () => {
+    const res = await api.delete(`/post/${data._id}`);
+    if (res.data.status === "success") {
+      toast.success(res.data.message);
+      setTimeout(() => {
+        negative("/");
+        window.location.reload();
+      }, 2000);
+    }
   };
   return (
     <div className="backdrop-post absolute w-full h-full flex justify-center items-center z-50 text-center">
@@ -21,7 +41,10 @@ export default function OptionPost({ showOptionPost, showCreatePost, update }) {
         >
           Update
         </li>
-        <li className="w-full p-3 border-b font-semibold text-lg border-gray-200 rounded-t-lg dark:border-gray-600 text-red-500">
+        <li
+          className="w-full p-3 border-b font-semibold text-lg border-gray-200 rounded-t-lg dark:border-gray-600 text-red-500"
+          onClick={handleDelete}
+        >
           Delete
         </li>
         <li

@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import CommentList from "../../comment/CommentList";
 
 export default function Comment({ showPost, data, socket }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [content, setContent] = useState("");
   const [comments, setComments] = useState([]);
   const { currentUser } = useContext(AuthContext);
@@ -136,17 +135,13 @@ export default function Comment({ showPost, data, socket }) {
       ></div>
       <div className="comment flex justify-center items-center">
         <div className="comment-img w-1/2">
-          <img
-            src={photo + "/posts/" + data.img}
-            alt=""
-            className="w-full h-full"
-          />
+          <img src={data.img} alt="" className="w-full h-full" />
         </div>
         <div className="comment-content w-1/2 bg-white">
           <div className="comment-content-title border-b flex justify-between items-center">
             <div className="comment-title-user hover:cursor-pointer flex items-center my-4 px-4 text-sm">
               <img
-                src={photo + "/users/" + data.userId.picturePhoto}
+                src={data.userId.picturePhoto}
                 alt=""
                 className="rounded-full border-2 object-cover w-10 h-10"
               />
@@ -163,7 +158,7 @@ export default function Comment({ showPost, data, socket }) {
               <div className="comment-body-user">
                 <div className="comment-body-user-title flex items-center">
                   <img
-                    src={photo + "/users/" + data.userId.picturePhoto}
+                    src={data.userId.picturePhoto}
                     alt=""
                     className="rounded-full border-2 object-cover hover:cursor-pointer w-10 h-10"
                   />

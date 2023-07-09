@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 export default function Search() {
   const [listUser, setListUser] = useState([]);
   const [findUser, setFindUser] = useState("");
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
 
   useEffect(() => {
     const getListUser = async () => {
@@ -50,7 +49,7 @@ export default function Search() {
                 >
                   <div className="rightbar-suggestion-user-info flex items-center">
                     <img
-                      src={photo + "/users/" + user.picturePhoto}
+                      src={user.picturePhoto}
                       alt=""
                       className="rounded-full w-10 h-10"
                       width="40"

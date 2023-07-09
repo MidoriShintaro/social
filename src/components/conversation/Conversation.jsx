@@ -7,7 +7,6 @@ export default function Conversation({ conversation, user, mess, isOnline }) {
   const [member, setMember] = useState({});
   const [messages, setMessage] = useState([]);
   const [online, setOnline] = useState(false);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const message = messages[messages.length - 1];
 
   useEffect(() => {
@@ -40,11 +39,7 @@ export default function Conversation({ conversation, user, mess, isOnline }) {
     <>
       <div className="box">
         <div className="image">
-          <img
-            src={photo + "/users/" + member?.picturePhoto}
-            alt=""
-            className="w-12 h-12"
-          />
+          <img src={member?.picturePhoto} alt="" className="w-12 h-12" />
         </div>
         <div
           className={`${online ? "online bg-green-400" : "online bg-gray-400"}`}

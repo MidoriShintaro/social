@@ -4,11 +4,12 @@ import { AuthContext } from "../../context/context";
 import api from "../../axios/axios";
 import SuggestUser from "../suggestUser/SuggestUser";
 import { logout } from "../../services/authServices";
+import { useNavigate } from "react-router-dom";
 
 export default function RightBar({ user, socket }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const { currentUser } = useContext(AuthContext);
   const [suggestUser, setSuggestUser] = useState([]);
+  const negative = useNavigate();
 
   useEffect(() => {
     const getSuggestUser = async () => {
@@ -35,7 +36,7 @@ export default function RightBar({ user, socket }) {
         <div className="rightbar-user  flex justify-between items-center">
           <div className="rightbar-user-info flex items-center">
             <img
-              src={photo + "/users/" + user?.picturePhoto}
+              src={user?.picturePhoto}
               alt=""
               className="rounded-full border-2 w-16 h-16"
             />
@@ -49,6 +50,8 @@ export default function RightBar({ user, socket }) {
               className="text-sm text-blue-500 font-medium hover:cursor-pointer"
               onClick={() => {
                 logout();
+                negative("/login");
+                window.location.reload();
               }}
             >
               Switch

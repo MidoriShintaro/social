@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function ModalProfile({ show, data }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [email, setEmail] = useState(data.email);
   const [fullname, setFullname] = useState(data.fullname);
   const [username, setUsername] = useState(data.username);
@@ -72,7 +71,7 @@ export default function ModalProfile({ show, data }) {
                     />
                   ) : (
                     <img
-                      src={photo + "/users/" + data.picturePhoto}
+                      src={data.picturePhoto}
                       alt=""
                       className="w-12 h-12 rounded-full"
                     />

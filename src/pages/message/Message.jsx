@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Message.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,10 +17,10 @@ import { AuthContext } from "../../context/context";
 import api from "../../axios/axios";
 import Conversation from "../../components/conversation/Conversation";
 import NoMessage from "../../components/noMessage/NoMessage";
-import { io } from "socket.io-client";
 import { sha256 } from "crypto-hash";
+import { Link } from "react-router-dom";
 
-export default function Message({ user }) {
+export default function Message({ user, socket }) {
   const [conversation, setConversation] = useState([]);
   const [chat, setChat] = useState({});
   const [messages, setMessage] = useState([]);
@@ -35,18 +35,14 @@ export default function Message({ user }) {
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const { currentUser } = useContext(AuthContext);
-  // const { user } = currentUser;
-  const socketRef = useRef();
   const socketURL = process.env.SOCKET_URL;
   const friendId =
     chat?.members?.find((f) => f !== user._id) === undefined
       ? ""
       : chat?.members?.find((f) => f !== user._id);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
 
   useEffect(() => {
-    socketRef.current = io(socketURL);
-    socketRef.current.on("getMessage", (data) => {
+    socket?.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
         content: data.content,
@@ -55,7 +51,7 @@ export default function Message({ user }) {
       });
     });
 
-    socketRef.current.on("likeMessage", (data) => {
+    socket?.on("likeMessage", (data) => {
       setLikedMessage({
         sender: data.senderId,
         isLiked: data.messageLike,
@@ -63,14 +59,14 @@ export default function Message({ user }) {
       });
     });
 
-    socketRef.current.on("dislikeMessage", (data) => {
+    socket?.on("dislikeMessage", (data) => {
       setLikedMessage({
         sender: data.senderId,
         isLiked: data.messageLike,
         createdAt: Date.now(),
       });
     });
-  }, [socketURL]);
+  }, [socketURL, socket]);
 
   useEffect(() => {
     setIsLiked(chat?.likes?.includes(user?._id));
@@ -91,11 +87,11 @@ export default function Message({ user }) {
   }, [likedMessage, chat]);
 
   useEffect(() => {
-    socketRef.current.emit("sendUser", user._id);
-    socketRef.current.on("getUser", (users) => {
+    socket?.emit("sendUser", user._id);
+    socket?.on("getUser", (users) => {
       setIsOnline(users.filter((u) => u.userId !== user._id));
     });
-  }, [user]);
+  }, [user, socket]);
 
   useEffect(() => {
     const getConversation = async () => {
@@ -140,7 +136,7 @@ export default function Message({ user }) {
       friendId,
     });
     if (res.data.message.startsWith("Like")) {
-      socketRef.current.emit("like", { user, friend });
+      socket?.emit("like", { user, friend });
       const response = await api.post("/message", {
         conversationId: chat._id,
         sender: user._id,
@@ -149,7 +145,7 @@ export default function Message({ user }) {
       });
       setMessage([...messages, response.data.message]);
     } else {
-      socketRef.current.emit("dislike", { user, friend });
+      socket?.emit("dislike", { user, friend });
       const response = await api.post("/message", {
         conversationId: chat._id,
         sender: user._id,
@@ -177,7 +173,7 @@ export default function Message({ user }) {
     }
 
     const receiverId = chat?.members?.find((mem) => mem !== user._id);
-    socketRef.current.emit("sendMessage", {
+    socket?.emit("sendMessage", {
       senderId: user._id,
       receiverId,
       content,
@@ -239,7 +235,7 @@ export default function Message({ user }) {
                 <div className="box">
                   <div className="image">
                     <img
-                      src={photo + "/users/" + friend?.picturePhoto}
+                      src={friend?.picturePhoto}
                       alt=""
                       className="w-8 h-8"
                     />
@@ -255,7 +251,7 @@ export default function Message({ user }) {
 
                 <div className="information">
                   <div className="username">
-                    <a href="https://www.instagram.com/">{friend?.username}</a>
+                    <Link to={`/user/${friend._id}`}>{friend?.username}</Link>
                   </div>
                 </div>
 
@@ -296,20 +292,11 @@ export default function Message({ user }) {
                               key={mes._id}
                             >
                               {mes.content}
-                              {mes.image && (
-                                <img
-                                  src={photo + "/messages/" + mes.image}
-                                  alt=""
-                                />
-                              )}
+                              {mes.image && <img src={mes.image} alt="" />}
                             </div>
                           )}
                         {mes.image && mes.content === "" && (
-                          <img
-                            src={photo + "/messages/" + mes.image}
-                            alt=""
-                            className="w-64 m-4"
-                          />
+                          <img src={mes.image} alt="" className="w-64 m-4" />
                         )}
                         <FontAwesomeIcon
                           icon={faEllipsis}

@@ -1,13 +1,14 @@
 import axios from "axios";
-const BASE_URL = "https://social-api-khd8.onrender.com/api";
+const BASE_URL = "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
+  withCredentials: false
 });
 
 const refreshToken = async () => {
   const refreshToken = getToken().refreshToken;
+  if (!refreshToken) return;
   return api.post("/auth/refresh-token", { refreshToken });
 };
 
@@ -46,6 +47,7 @@ api.interceptors.response.use(
         originalConfig._retry = true;
         try {
           const res = await refreshToken();
+          console.log(res);
           window.localStorage.setItem("user", JSON.stringify(res.data));
           api.defaults.headers[
             "Authorization"

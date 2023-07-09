@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ForgotPassword.css";
 import { ToastContainer, toast } from "react-toastify";
 import { forgotPassword } from "../../services/authServices";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -32,9 +32,10 @@ export default function ForgotPassword() {
 
     if (res.status === "success") {
       toast.success(res.message);
-      // setTimeout(() => {
-      //   navigate("/login");
-      // }, 10000);
+      setTimeout(() => {
+        navigate("/login");
+        window.location.reload();
+      }, 5000);
     }
   };
   return (

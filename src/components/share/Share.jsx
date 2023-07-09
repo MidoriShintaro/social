@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function Share({ user }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   // const [user, setUser] = useState([]);
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
@@ -24,9 +23,14 @@ export default function Share({ user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
+    if(image.size > 10485760) {
+      toast.error("Image size should be less than 1MB");
+      return;
+    }
     data.append("userId", user?._id);
     data.append("content", content);
     data.append("img", image);
+    console.log(image);
     const res = await api.post("/post", data, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -51,7 +55,7 @@ export default function Share({ user }) {
         <div className="share-top flex border-b py-4">
           <div className="share-user mr-3">
             <img
-              src={photo + "/users/" + user?.picturePhoto}
+              src={user?.picturePhoto}
               alt=""
               className="rounded-full h-8 w-8"
             />
@@ -60,7 +64,7 @@ export default function Share({ user }) {
             <input
               type="text"
               className="focus:outline-none w-full outline-none"
-              placeholder="Hey Raito, What do you think?"
+              placeholder={`Hey ${user?.username}! What do you think?`}
               onChange={(e) => setContent(e.target.value)}
             />
             {previewImage ? (

@@ -46,7 +46,11 @@ export default function Login() {
     <>
       <div className="h-screen bg-gray-50 flex flex-col justify-center items-center">
         <div className="bg-white border border-gray-300 w-80 py-8 flex items-center flex-col mb-3">
-          {/* <h1 className="bg-no-repeat instagram-logo"></h1> */}
+          <img
+            src="https://res.cloudinary.com/dyp4yk66w/image/upload/v1688828079/logo/chu_qchvyf.png"
+            alt=""
+            className="bg-no-repeat instagram-logo"
+          />
           <form className="mt-8 w-64 flex flex-col" onSubmit={handleSubmit}>
             <input
               className="text-xs w-full mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400 active:outline-none"
@@ -80,9 +84,9 @@ export default function Login() {
           </div>
           <button className="mt-4 flex">
             <div className="bg-no-repeat facebook-logo mr-1"></div>
-            <span className="text-xs text-blue-900 font-semibold">
+            <button className="text-xs text-blue-900 font-semibold">
               Log in with Facebook
-            </span>
+            </button>
           </button>
           <Link
             to="/forgot-password"

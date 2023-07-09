@@ -46,7 +46,10 @@ function Register() {
   return (
     <div className="h-screen bg-gray-50 flex flex-col justify-center items-center">
       <div className="bg-white border border-gray-300 w-80 py-8 flex items-center flex-col mb-3">
-        {/* <h1></h1> */}
+        <img
+          src="https://res.cloudinary.com/dyp4yk66w/image/upload/v1688828079/logo/chu_qchvyf.png"
+          alt=""
+        />
         <button className="mt-4 flex w-4/5 justify-center items-center">
           <div className="bg-no-repeat bg-blue-500 mr-1 w-full rounded-lg p-1">
             <span className="text-xs text-white font-semibold">

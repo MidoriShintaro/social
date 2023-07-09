@@ -5,7 +5,6 @@ import api from "../../axios/axios";
 
 export default function SuggestUser({ user, socket }) {
   const { currentUser } = useContext(AuthContext);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [isFollow, setIsFollow] = useState(false);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function SuggestUser({ user, socket }) {
     >
       <div className="rightbar-suggestion-user-info flex items-center">
         <img
-          src={photo + "/users/" + user.picturePhoto}
+          src={user.picturePhoto}
           alt=""
           className="rounded-full w-10 h-10"
           width="40"

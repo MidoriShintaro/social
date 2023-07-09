@@ -21,21 +21,20 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [isShowModalProfile, setIsShowModalProfile] = useState(false);
   const [data, setData] = useState({});
-  const socketURL = process.env.SOCKET_URL;
+  const socketURL = process.env.REACT_APP_SOCKET_URL;
   useEffect(() => {
     setSocket(io(socketURL));
   }, [socketURL]);
 
   useEffect(() => {
-    socket?.emit("sendUser", currentUser.user._id);
+    socket?.emit("sendUser", currentUser?.user?._id);
     socket?.on("getUser", (users) => {
       console.log(users);
     });
   }, [currentUser, socket]);
-
   useEffect(() => {
     const getUser = async () => {
-      const res = await api.get(`/user/${currentUser.user._id}`);
+      const res = await api.get(`/user/${currentUser?.user?._id}`);
       setUser(res.data.user);
     };
     getUser();
@@ -79,7 +78,7 @@ function App() {
         element={
           <div className="flex h-full">
             <Sidebar user={user} />
-            <Message user={user} />
+            <Message user={user} socket={socket} />
           </div>
         }
       />

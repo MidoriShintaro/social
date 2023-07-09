@@ -5,7 +5,6 @@ import { AuthContext } from "../../context/context";
 import "./Notification.css";
 
 export default function Notification({ socket }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const { currentUser } = useContext(AuthContext);
   const [notifications, setNotification] = useState([]);
   const today = new Date();
@@ -68,7 +67,7 @@ export default function Notification({ socket }) {
                     >
                       <div className="rightbar-suggestion-user-info flex items-center">
                         <img
-                          src={photo + "/users/" + not.userId.picturePhoto}
+                          src={not.userId.picturePhoto}
                           alt=""
                           className="rounded-full w-8 h-8"
                         />
@@ -91,12 +90,12 @@ export default function Notification({ socket }) {
               {new Date(not.createdAt).getMonth() + 1 < thisMonth &&
                 new Date(not.createdAt).getFullYear() < thisYear && (
                   <li
-                    key={i}
+                    key={not._id}
                     className="flex px-4 py-3 justify-between items-center hover:bg-gray-200 hover:cursor-pointer"
                   >
                     <div className="rightbar-suggestion-user-info flex items-center">
                       <img
-                        src={photo + "/users/" + not.userId.picturePhoto}
+                        src={not.userId.picturePhoto}
                         alt=""
                         className="rounded-full w-8 h-8"
                       />

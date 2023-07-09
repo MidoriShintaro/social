@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function Create({ user, showCreatePost, data, update }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const [description, setDescription] = useState(data.desc);
   const [content, setContent] = useState(data.content);
   const [image, setImage] = useState("");
@@ -107,17 +106,13 @@ export default function Create({ user, showCreatePost, data, update }) {
                 {previewImage ? (
                   <img src={previewImage} alt="" className="w-full h-full" />
                 ) : (
-                  <img
-                    src={photo + "/posts/" + data.img}
-                    alt=""
-                    className="w-full h-full"
-                  />
+                  <img src={data.img} alt="" className="w-full h-full" />
                 )}
               </div>
               <div className="create-post-content w-1/2 pl-3 pt-3 border-l">
                 <div className="create-post-content-user flex items-center mb-6">
                   <img
-                    src={photo + "/users/" + user.picturePhoto}
+                    src={user.picturePhoto}
                     alt=""
                     className="rounded-full w-10 h-10"
                   />
@@ -197,7 +192,7 @@ export default function Create({ user, showCreatePost, data, update }) {
               <div className="create-post-content w-1/2 pl-3 pt-3 border-l">
                 <div className="create-post-content-user flex items-center mb-6">
                   <img
-                    src={photo + "/users/" + user.picturePhoto}
+                    src={user.picturePhoto}
                     alt=""
                     className="rounded-full w-10 h-10"
                   />

@@ -17,7 +17,6 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
   const [typeSideBar, setTypeSideBar] = useState("");
   const [showMore, setShowMore] = useState(false);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className="sidebar basis-1/4 flex justify-end">
@@ -28,7 +27,11 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
       >
         <div className="h-full px-3 py-4">
           <div className="sidebar-logo my-8">
-            <img src="" alt="" />
+            <img
+              src="https://res.cloudinary.com/dyp4yk66w/image/upload/v1688828079/logo/chu_qchvyf.png"
+              className=""
+              alt=""
+            />
           </div>
           <div className="sidebar-content">
             <ul className="space-y-2 font-medium">
@@ -133,7 +136,7 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
                 <li className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item">
                   <div className="flex items-center p-2 text-gray-900 rounded-lg">
                     <img
-                      src={photo + "/users/" + user?.picturePhoto}
+                      src={user?.picturePhoto}
                       alt=""
                       className="rounded-full sidebar-icon w-6 h-6"
                     />
@@ -147,12 +150,14 @@ const Sidebar = ({ user, socket, showCreatePost, update }) => {
                   </div>
                 </li>
               </Link>
-              <li className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item sidebar-more">
+              <li
+                className="hover:bg-gray-100 hover:rounded-3xl hover:cursor-pointer sidebar-list-item sidebar-more"
+                onClick={() => setShowMore(!showMore)}
+              >
                 <div className="flex items-center p-2 text-gray-900 rounded-lg">
                   <FontAwesomeIcon
                     icon={faBars}
                     className="text-2xl sidebar-icon"
-                    onClick={() => setShowMore(!showMore)}
                   />
                   <span
                     className={isOpenSideBar === false ? "ml-12" : "opacity-0"}

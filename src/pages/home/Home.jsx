@@ -44,6 +44,7 @@ export default function Home({ user, socket }) {
           showOptionPost={showOptionPost}
           showCreatePost={showCreatePost}
           update={handleGetUpdate}
+          data={getData}
         />
       )}
       {isShowCreatePost && (

@@ -17,7 +17,6 @@ export default function CommentList({ comment, user, socket }) {
   const [showUpdateComment, setShowUpdateComment] = useState(false);
   const [isLikeComment, setIsLikeComment] = useState(false);
   const [likeComment, setLikeComment] = useState(comment.likes.length);
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
 
   useEffect(() => {
     setIsLikeComment(comment.likes.includes(user._id));
@@ -83,7 +82,7 @@ export default function CommentList({ comment, user, socket }) {
     <li className="my-4 user-comment relative" key={comment._id}>
       <div className="comment-body-friend-title flex items-center">
         <img
-          src={photo + "/users/" + comment.userId.picturePhoto}
+          src={comment.userId.picturePhoto}
           alt=""
           className="rounded-full border-2 object-cover hover:cursor-pointer w-10 h-10"
         />
@@ -105,7 +104,9 @@ export default function CommentList({ comment, user, socket }) {
               className="text-sm ml-4 mr-2 hover:cursor-pointer"
               onClick={handleLikeComment}
             />
-            <span className="text-gray-400 w-10 text-sm">{likeComment} likes</span>
+            <span className="text-gray-400 w-10 text-sm">
+              {likeComment} likes
+            </span>
             {comment.userId._id === user._id && (
               <FontAwesomeIcon
                 icon={faEllipsis}

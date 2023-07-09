@@ -17,7 +17,6 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 
 export default function Post({ user, socket }) {
-  const photo = process.env.REACT_APP_PUBLIC_FOLDER;
   const { postId } = useParams();
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
@@ -260,7 +259,7 @@ export default function Post({ user, socket }) {
                   <img src={previewImage} alt="" className="w-full h-full" />
                 ) : (
                   <img
-                    src={photo + "/posts/" + post?.img}
+                    src={post?.img}
                     alt=""
                     className="w-full h-full"
                   />
@@ -269,7 +268,7 @@ export default function Post({ user, socket }) {
               <div className="create-post-content w-1/2 pl-3 pt-3 border-l">
                 <div className="create-post-content-user flex items-center mb-6">
                   <img
-                    src={photo + "/users/" + user.picturePhoto}
+                    src={user.picturePhoto}
                     alt=""
                     className="rounded-full w-10 h-10"
                   />
@@ -312,11 +311,11 @@ export default function Post({ user, socket }) {
           </div>
         </div>
       )}
-      <div className="backdrop-comment w-3/4 h-full mt-12 mx-1 p-6">
+      <div className="backdrop-comment h-full mx-1">
         <div className="post-comment flex justify-center items-center h-full">
           <div className="post-comment-img w-1/2">
             <img
-              src={photo + "/posts/" + post.img}
+              src={post.img}
               alt=""
               className="w-full h-full"
             />
@@ -325,7 +324,7 @@ export default function Post({ user, socket }) {
             <div className="post-comment-content-title border-b flex justify-between items-center">
               <div className="post-comment-title-user hover:cursor-pointer flex items-center my-4 px-4 text-sm">
                 <img
-                  src={photo + "/users/" + post.userId?.picturePhoto}
+                  src={post.userId?.picturePhoto}
                   alt=""
                   className="rounded-full border-2 object-cover w-10 h-10"
                 />
@@ -347,7 +346,7 @@ export default function Post({ user, socket }) {
                 <div className="post-comment-body-user">
                   <div className="post-comment-body-user-title flex items-center">
                     <img
-                      src={photo + "/users/" + post.userId?.picturePhoto}
+                      src={post.userId?.picturePhoto}
                       alt=""
                       className="rounded-full border-2 object-cover hover:cursor-pointer w-10 h-10"
                     />
@@ -369,7 +368,7 @@ export default function Post({ user, socket }) {
                 <div className="post-comment-body-friend">
                   <ul>
                     {comments.map((comment) => (
-                      <>
+                      <div key={comment._id}>
                         {comment.postId._id === post._id && (
                           <CommentList
                             comment={comment}
@@ -378,7 +377,7 @@ export default function Post({ user, socket }) {
                             socket={socket}
                           />
                         )}
-                      </>
+                      </div>
                     ))}
                   </ul>
                 </div>
