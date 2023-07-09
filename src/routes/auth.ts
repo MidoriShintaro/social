@@ -8,6 +8,8 @@ import {
   forgotPassword,
   resetPassword,
   changedPassword,
+  signAccessToken,
+  signRefreshToken,
 } from "../controllers/auth";
 import passport from "passport";
 const router = Router();
@@ -24,12 +26,11 @@ router.get("/facebook", passport.authenticate("facebook", { scope: "email" }));
 
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: process.env.SUCCESS_URL,
-    failureRedirect: process.env.FAILURE_URL,
-  }),
-  (req: Request, res: Response) => {
-    res.sendStatus(200).json("hello");
+  passport.authenticate("facebook", { session: false }),
+  function (req: any, res: any) {
+    const accessToken = req.user.accessToken;
+    // console.log(req.l);
+    return res.redirect(process.env.SUCCESS_URL);
   }
 );
 

@@ -29,10 +29,7 @@ function passportConfig(app) {
         // Handle the user profile data and authentication logic here
         const currentUser = yield User_1.default.findOne({ facebookId: profile.id });
         if (currentUser) {
-            return done(null, {
-                accessToken,
-                currentUser,
-            });
+            return done(null, { currentUser, accessToken });
         }
         const newUser = new User_1.default({
             facebookId: profile.id,
@@ -42,13 +39,12 @@ function passportConfig(app) {
             picturePhoto: (_c = profile.photos) === null || _c === void 0 ? void 0 : _c[0].value,
         });
         const user = yield newUser.save();
-        return done(null, { accessToken, user });
+        return done(null, { user, accessToken });
     })));
     passport_1.default.serializeUser(function (user, done) {
         done(null, user._id);
     });
     passport_1.default.deserializeUser(function (id, done) {
-        console.log(id);
         User_1.default.findById(id).then((user) => done(null, user));
     });
     // Initialize Passport and session support

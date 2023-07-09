@@ -3,6 +3,7 @@ import { Strategy as FacebookStrategy } from "passport-facebook";
 import { Express } from "express";
 import dotenv from "dotenv";
 import User from "../models/User";
+import { signAccessToken, signRefreshToken } from "../controllers/auth";
 
 dotenv.config();
 
@@ -20,10 +21,7 @@ export default function passportConfig(app: Express): void {
         // Handle the user profile data and authentication logic here
         const currentUser = await User.findOne({ facebookId: profile.id });
         if (currentUser) {
-          return done(null, {
-            accessToken,
-            currentUser,
-          });
+          return done(null, { currentUser, accessToken });
         }
         const newUser = new User({
           facebookId: profile.id,
@@ -33,7 +31,7 @@ export default function passportConfig(app: Express): void {
           picturePhoto: profile.photos?.[0].value,
         });
         const user = await newUser.save();
-        return done(null, { accessToken, user });
+        return done(null, { user, accessToken });
       }
     )
   );
@@ -43,7 +41,6 @@ export default function passportConfig(app: Express): void {
   });
 
   passport.deserializeUser(function (id, done) {
-    console.log(id);
     User.findById(id).then((user) => done(null, user));
   });
 

@@ -15,11 +15,10 @@ router.post("/refresh-token", auth_1.refreshToken);
 router.post("/changed-password", auth_1.protect, auth_1.changedPassword);
 router.patch("/reset-password/:token", auth_1.resetPassword);
 router.get("/facebook", passport_1.default.authenticate("facebook", { scope: "email" }));
-router.get("/facebook/callback", passport_1.default.authenticate("facebook", {
-    successRedirect: process.env.SUCCESS_URL,
-    failureRedirect: process.env.FAILURE_URL,
-}), (req, res) => {
-    res.sendStatus(200).json("hello");
+router.get("/facebook/callback", passport_1.default.authenticate("facebook", { session: false }), function (req, res) {
+    const accessToken = req.user.accessToken;
+    // console.log(req.l);
+    return res.redirect(process.env.SUCCESS_URL);
 });
 exports.default = router;
 //# sourceMappingURL=auth.js.map
