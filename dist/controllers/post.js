@@ -17,6 +17,7 @@ const Post_1 = __importDefault(require("../models/Post"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const User_1 = __importDefault(require("../models/User"));
 const multer_1 = __importDefault(require("../utils/multer"));
+const cloudinary_1 = require("../utils/cloudinary");
 const upload = (0, multer_1.default)("posts");
 exports.uploadPostImage = upload.single("img");
 const getAllPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,8 +35,9 @@ const getAllPost = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.getAllPost = getAllPost;
 const createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const img = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.filename) === undefined ? "" : req.file.filename;
+    // const img = req.file === undefined ? req.body.img : req.file.filename;
+    const path = req.file === undefined ? "" : req.file.path;
+    const img = path === "" ? "" : yield (0, cloudinary_1.uploadCloud)(path, "social/post");
     const { userId, content, desc } = req.body;
     if (!userId)
         return next(new HandleError_1.default("User Id must have required", 400));
@@ -66,10 +68,12 @@ const getPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getPost = getPost;
 const updatePost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { id } = req.params;
-    const img = req.file === undefined ? req.body.img : req.file.filename;
+    // const img = req.file === undefined ? req.body.img : req.file.filename;
+    const path = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) === undefined ? "" : req.file.path;
+    const img = yield (0, cloudinary_1.uploadCloud)(path, "social/post");
     const { userId, content, desc } = req.body;
-    console.log(req.body);
     const post = yield Post_1.default.findById(id);
     if (!post)
         return next(new HandleError_1.default("Cannot find post with id", 404));
@@ -119,12 +123,12 @@ const Timeline = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         path: "userId",
         select: "-password",
     });
-    const postFriend = yield Promise.all(user.followings.map((friendId) => {
-        return Post_1.default.find({ userId: friendId });
-    }));
-    res
-        .status(200)
-        .json({ status: "success", posts: postUser.concat(...postFriend) });
+    // const postFriend = await Promise.all(
+    //   user.followings.map((friendId) => {
+    //     return Post.find({ userId: friendId });
+    //   })
+    // );
+    res.status(200).json({ status: "success", posts: postUser });
 });
 exports.Timeline = Timeline;
 //# sourceMappingURL=post.js.map

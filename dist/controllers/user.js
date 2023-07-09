@@ -16,6 +16,7 @@ exports.Follow = exports.deleteUser = exports.updateUser = exports.getUser = exp
 const User_1 = __importDefault(require("../models/User"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const multer_1 = __importDefault(require("../utils/multer"));
+const cloudinary_1 = require("../utils/cloudinary");
 const upload = (0, multer_1.default)("users");
 exports.uploadAvatar = upload.single("picturePhoto");
 const getAllUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,8 +39,10 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getUser = getUser;
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { id } = req.params;
-    const picturePhoto = req.file === undefined ? req.body.picturePhoto : req.file.filename;
+    const path = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) === undefined ? "" : req.file.path;
+    const picturePhoto = yield (0, cloudinary_1.uploadCloud)(path, "social/user");
     const { email, username, fullname } = req.body;
     const user = yield User_1.default.findById(id);
     if (!user)

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changedPassword = exports.resetPassword = exports.forgotPassword = exports.logout = exports.refreshToken = exports.protect = exports.login = exports.register = void 0;
+exports.changedPassword = exports.resetPassword = exports.forgotPassword = exports.logout = exports.refreshToken = exports.protect = exports.login = exports.register = exports.signRefreshToken = exports.signAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const User_1 = __importDefault(require("../models/User"));
@@ -32,11 +32,13 @@ const signAccessToken = (user) => {
         expiresIn: "20d",
     });
 };
+exports.signAccessToken = signAccessToken;
 const signRefreshToken = (user) => {
     return jsonwebtoken_1.default.sign(user, refreshToken_secret, {
         expiresIn: "30d",
     });
 };
+exports.signRefreshToken = signRefreshToken;
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, fullname, username, password } = req.body;
     if (!email || !fullname || !username || !password) {
@@ -69,8 +71,8 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     if (!user || !bcrypt_1.default.compareSync(password, user.password)) {
         return next(new HandleError_1.default("Incorrect email or password", 400));
     }
-    const accessToken = signAccessToken({ id: user._id, isAdmin: user.isAdmin });
-    const refreshToken = signRefreshToken({
+    const accessToken = (0, exports.signAccessToken)({ id: user._id, isAdmin: user.isAdmin });
+    const refreshToken = (0, exports.signRefreshToken)({
         id: user._id,
         isAdmin: user.isAdmin,
     });
@@ -129,8 +131,8 @@ const refreshToken = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (err)
             return next(new HandleError_1.default(err.message, 401));
         const { id, isAdmin } = payload;
-        const refreshToken = signAccessToken({ id, isAdmin });
-        const accessToken = signAccessToken({ id, isAdmin });
+        const refreshToken = (0, exports.signAccessToken)({ id, isAdmin });
+        const accessToken = (0, exports.signAccessToken)({ id, isAdmin });
         const user = yield User_1.default.findById(id).select("-password");
         return res.status(200).json({
             status: "success",

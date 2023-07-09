@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Message from "../models/Message";
 import HandleError from "../utils/HandleError";
 import configMulter from "../utils/multer";
+import { uploadCloud } from "../utils/cloudinary";
 
 const upload = configMulter("messages");
 export const uploadImageMessage = upload.single("image");
@@ -11,7 +12,9 @@ export const createMessage = async (
   res: Response,
   next: NextFunction
 ) => {
-  const image = req.file?.filename === undefined ? "" : req.file?.filename;
+  // const image = req.file?.filename === undefined ? "" : req.file?.filename;
+  const path = req.file?.path === undefined ? "" : req.file.path;
+  const image = await uploadCloud(path, "social/message");
   const { conversationId, sender, content, isLiked } = req.body;
   const message = await Message.create({
     conversationId,

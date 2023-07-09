@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import {
   login,
   protect,
@@ -10,27 +10,27 @@ import {
   changedPassword,
 } from "../controllers/auth";
 import passport from "passport";
-const authRouter = Router();
-// const auth = require("../controllers/auth");
+const router = Router();
 
-authRouter.post("/register", register);
-authRouter.post("/login", login);
-authRouter.post("/logout", logout);
-authRouter.post("/forgot-password", forgotPassword);
-authRouter.post("/refresh-token", refreshToken);
-authRouter.post("/changed-password", protect, changedPassword);
-authRouter.patch("/reset-password/:token", resetPassword);
-// authRouter.get(
-//   "/auth/facebook",
-//   passport.authenticate("facebook", { scope: "email" })
-// );
+router.post("/register", register);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/refresh-token", refreshToken);
+router.post("/changed-password", protect, changedPassword);
+router.patch("/reset-password/:token", resetPassword);
 
-// authRouter.get(
-//   "/auth/facebook/callback",
-//   passport.authenticate("facebook", {
-//     successRedirect: "/",
-//     failureRedirect: "/login",
-//   })
-// );
+router.get("/facebook", passport.authenticate("facebook", { scope: "email" }));
 
-export default authRouter;
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: process.env.SUCCESS_URL,
+    failureRedirect: process.env.FAILURE_URL,
+  }),
+  (req: Request, res: Response) => {
+    res.sendStatus(200).json("hello");
+  }
+);
+
+export default router;

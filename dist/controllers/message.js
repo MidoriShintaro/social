@@ -16,11 +16,14 @@ exports.deleteMessage = exports.updateMessage = exports.getMessage = exports.cre
 const Message_1 = __importDefault(require("../models/Message"));
 const HandleError_1 = __importDefault(require("../utils/HandleError"));
 const multer_1 = __importDefault(require("../utils/multer"));
+const cloudinary_1 = require("../utils/cloudinary");
 const upload = (0, multer_1.default)("messages");
 exports.uploadImageMessage = upload.single("image");
 const createMessage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    const image = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.filename) === undefined ? "" : (_b = req.file) === null || _b === void 0 ? void 0 : _b.filename;
+    var _a;
+    // const image = req.file?.filename === undefined ? "" : req.file?.filename;
+    const path = ((_a = req.file) === null || _a === void 0 ? void 0 : _a.path) === undefined ? "" : req.file.path;
+    const image = yield (0, cloudinary_1.uploadCloud)(path, "social/message");
     const { conversationId, sender, content, isLiked } = req.body;
     const message = yield Message_1.default.create({
         conversationId,

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import HandleError from "../utils/HandleError";
 import configMulter from "../utils/multer";
+import { uploadCloud } from "../utils/cloudinary";
 
 const upload = configMulter("users");
 export const uploadAvatar = upload.single("picturePhoto");
@@ -38,8 +39,8 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const picturePhoto =
-    req.file === undefined ? req.body.picturePhoto : req.file.filename;
+  const path = req.file?.path === undefined ? "" : req.file.path;
+  const picturePhoto = await uploadCloud(path, "social/user");
   const { email, username, fullname } = req.body;
   const user = await User.findById(id);
   if (!user) return next(new HandleError("Cannot find user", 404));

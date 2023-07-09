@@ -3,6 +3,7 @@ import Post from "../models/Post";
 import HandleError from "../utils/HandleError";
 import User from "../models/User";
 import configMulter from "../utils/multer";
+import { uploadCloud } from "../utils/cloudinary";
 
 const upload = configMulter("posts");
 export const uploadPostImage = upload.single("img");
@@ -30,7 +31,9 @@ export const createPost = async (
   res: Response,
   next: NextFunction
 ) => {
-  const img = req.file?.filename === undefined ? "" : req.file.filename;
+  // const img = req.file === undefined ? req.body.img : req.file.filename;
+  const path = req.file === undefined ? "" : req.file.path;
+  const img = path === "" ? "" : await uploadCloud(path, "social/post");
   const { userId, content, desc } = req.body;
   if (!userId) return next(new HandleError("User Id must have required", 400));
   const newPost = await Post.create({
@@ -72,9 +75,10 @@ export const updatePost = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const img = req.file === undefined ? req.body.img : req.file.filename;
+  // const img = req.file === undefined ? req.body.img : req.file.filename;
+  const path = req.file?.path === undefined ? "" : req.file.path;
+  const img = await uploadCloud(path, "social/post");
   const { userId, content, desc } = req.body;
-  console.log(req.body);
   const post = await Post.findById(id);
   if (!post) return next(new HandleError("Cannot find post with id", 404));
   await Post.findByIdAndUpdate(
@@ -147,12 +151,10 @@ export const Timeline = async (
     path: "userId",
     select: "-password",
   });
-  const postFriend = await Promise.all(
-    user.followings.map((friendId) => {
-      return Post.find({ userId: friendId });
-    })
-  );
-  res
-    .status(200)
-    .json({ status: "success", posts: postUser.concat(...postFriend) });
+  // const postFriend = await Promise.all(
+  //   user.followings.map((friendId) => {
+  //     return Post.find({ userId: friendId });
+  //   })
+  // );
+  res.status(200).json({ status: "success", posts: postUser });
 };

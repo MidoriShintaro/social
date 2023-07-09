@@ -17,13 +17,13 @@ const signToken = (user: object): string => {
   return jwt.sign(user, token_secret, { expiresIn: "10m" });
 };
 
-const signAccessToken = (user: object): string => {
+export const signAccessToken = (user: object): string => {
   return jwt.sign(user, accessToken_secret, {
     expiresIn: "20d",
   });
 };
 
-const signRefreshToken = (user: object): string => {
+export const signRefreshToken = (user: object): string => {
   return jwt.sign(user, refreshToken_secret, {
     expiresIn: "30d",
   });

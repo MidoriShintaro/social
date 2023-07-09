@@ -12,37 +12,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initPassport = void 0;
-const dotenv_1 = __importDefault(require("dotenv"));
-const passport_facebook_1 = __importDefault(require("passport-facebook"));
 const passport_1 = __importDefault(require("passport"));
+const passport_facebook_1 = require("passport-facebook");
+const dotenv_1 = __importDefault(require("dotenv"));
 const User_1 = __importDefault(require("../models/User"));
 dotenv_1.default.config();
-const initPassport = () => {
-    passport_1.default.serializeUser((user, done) => {
-        done(undefined, user._id);
-    });
-    passport_1.default.deserializeUser((id, done) => {
-        User_1.default.findById(id).then((user) => {
-            done(undefined, user);
-        });
-    });
-    passport_1.default.use(new passport_facebook_1.default.Strategy({
+function passportConfig(app) {
+    // Configure Passport with Facebook strategy
+    passport_1.default.use(new passport_facebook_1.Strategy({
         clientID: process.env.FB_KEY,
         clientSecret: process.env.FB_SECRET,
         callbackURL: process.env.FB_CALLBACK,
-    }, function (accessToken, refreshToken, profile, done) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(profile);
-            const user = yield User_1.default.findById({ facebookId: profile.id });
-            // if(!user) {
-            //   const newUser = new User({
-            //     username: profile.
-            //   })
-            // }
-            return user;
+        profileFields: ["id", "displayName", "email", "name", "photos"],
+    }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
+        var _a, _b, _c;
+        // Handle the user profile data and authentication logic here
+        const currentUser = yield User_1.default.findOne({ facebookId: profile.id });
+        if (currentUser) {
+            return done(null, {
+                accessToken,
+                currentUser,
+            });
+        }
+        const newUser = new User_1.default({
+            facebookId: profile.id,
+            email: (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0].value,
+            fullname: profile.displayName,
+            username: (_b = profile.name) === null || _b === void 0 ? void 0 : _b.givenName,
+            picturePhoto: (_c = profile.photos) === null || _c === void 0 ? void 0 : _c[0].value,
         });
-    }));
-};
-exports.initPassport = initPassport;
+        const user = yield newUser.save();
+        return done(null, { accessToken, user });
+    })));
+    passport_1.default.serializeUser(function (user, done) {
+        done(null, user._id);
+    });
+    passport_1.default.deserializeUser(function (id, done) {
+        console.log(id);
+        User_1.default.findById(id).then((user) => done(null, user));
+    });
+    // Initialize Passport and session support
+    app.use(passport_1.default.initialize());
+    app.use(passport_1.default.session());
+}
+exports.default = passportConfig;
 //# sourceMappingURL=passport.js.map

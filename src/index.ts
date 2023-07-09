@@ -7,7 +7,7 @@ import session from "express-session";
 import connect from "./db/db";
 import passport from "passport";
 import { HandlingError } from "./controllers/error";
-import { initPassport } from "./config/passport";
+import initPassport from "./config/passport";
 import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
 import postRouter from "./routes/post";
@@ -22,7 +22,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 const urlClient = process.env.URL_CLIENT as string;
-
+const secret = process.env.SECRET as string;
 //config socket
 initSocket();
 
@@ -32,7 +32,7 @@ connect();
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(process.cwd(), "/dist/public")));
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(helmet());
 app.use(
   cors({
@@ -57,16 +57,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   );
   next();
 });
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(
-//   session({
-//     secret,
-//     resave: true,
-//     saveUninitialized: true,
-//   })
-// );
-// app.use(initPassport);
+app.use(
+  session({
+    secret,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+initPassport(app);
 
 //routes
 app.use("/api/auth", authRouter);

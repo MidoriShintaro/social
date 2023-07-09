@@ -1,6 +1,7 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 
 export interface IUser {
+  _id: Types.ObjectId;
   fullname: string;
   email: string;
   username: string;
@@ -19,8 +20,12 @@ const UserSchema = new Schema<IUser>(
     fullname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true, min: 6 },
-    picturePhoto: { type: String, default: "default.png" },
+    password: { type: String, min: 6 },
+    picturePhoto: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dyp4yk66w/image/upload/v1688841919/social/user/default_nahca9.jpg",
+    },
     followers: [{ type: String, default: [] }],
     followings: [{ type: String, default: [] }],
     isAdmin: { type: Boolean, default: false },

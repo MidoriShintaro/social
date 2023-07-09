@@ -8,8 +8,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const express_session_1 = __importDefault(require("express-session"));
 const db_1 = __importDefault(require("./db/db"));
 const error_1 = require("./controllers/error");
+const passport_1 = __importDefault(require("./config/passport"));
 const user_1 = __importDefault(require("./routes/user"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const post_1 = __importDefault(require("./routes/post"));
@@ -23,6 +25,7 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5000;
 const urlClient = process.env.URL_CLIENT;
+const secret = process.env.SECRET;
 //config socket
 (0, socket_1.default)();
 //connect db
@@ -47,16 +50,12 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version");
     next();
 });
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(
-//   session({
-//     secret,
-//     resave: true,
-//     saveUninitialized: true,
-//   })
-// );
-// app.use(initPassport);
+app.use((0, express_session_1.default)({
+    secret,
+    resave: true,
+    saveUninitialized: true,
+}));
+(0, passport_1.default)(app);
 //routes
 app.use("/api/auth", auth_1.default);
 app.use("/api/notification", notification_1.default);
