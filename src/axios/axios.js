@@ -1,9 +1,9 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.BASE_URL;
 
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: false
+  withCredentials: false,
 });
 
 const refreshToken = async () => {
@@ -47,12 +47,10 @@ api.interceptors.response.use(
         originalConfig._retry = true;
         try {
           const res = await refreshToken();
-          console.log(res);
           window.localStorage.setItem("user", JSON.stringify(res.data));
           api.defaults.headers[
             "Authorization"
           ] = `$Bearer ${res.data.accessToken}`;
-          console.log(res.data);
           return api(originalConfig);
         } catch (err) {
           return err && err.response && err.response.data

@@ -25,6 +25,10 @@ export default function Login() {
       );
   };
 
+  const handleLoginFacebook = () => {
+    window.location.href = process.env.FACEBOOK_URL;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValidEmail = validateEmail(email);
@@ -84,9 +88,12 @@ export default function Login() {
           </div>
           <button className="mt-4 flex">
             <div className="bg-no-repeat facebook-logo mr-1"></div>
-            <button className="text-xs text-blue-900 font-semibold">
+            <span
+              onClick={handleLoginFacebook}
+              className="text-xs text-blue-900 font-semibold"
+            >
               Log in with Facebook
-            </button>
+            </span>
           </button>
           <Link
             to="/forgot-password"

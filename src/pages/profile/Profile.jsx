@@ -41,7 +41,6 @@ export default function Profile({ current, show, socket }) {
     const res = await api.patch(`/user/${userId}/follow`, {
       userId: current?._id,
     });
-    console.log(res);
     const body = {
       receiverId: userId,
       id: current?._id,

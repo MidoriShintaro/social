@@ -68,7 +68,7 @@ export default function RightBar({ user, socket }) {
         </div>
         <div className="rightbar-suggestion-friend my-6">
           {suggestUser
-            .filter((user) => user._id !== currentUser.user._id)
+            ?.filter((user) => user._id !== currentUser.user._id)
             ?.map((user) => (
               <SuggestUser socket={socket} user={user} key={user._id} />
             ))}

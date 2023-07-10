@@ -5,22 +5,24 @@ import { Route, Routes } from "react-router-dom";
 import Register from "../pages/register/Register";
 import ForgotPassword from "../pages/forgotPassword/ForgotPassword";
 import ResetPassword from "../pages/resetPassword/ResetPassword";
+import { useCookies } from "react-cookie";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({});
+  const [cookies] = useCookies();
   useEffect(() => {
     const checkLogin = () => {
-      let user = isAuthenticate();
-      if (user === null) {
+      let user = isAuthenticate(cookies);
+      if (!user) {
         localStorage.setItem("user", "");
         user = "";
       }
       setCurrentUser(user);
     };
     checkLogin();
-  }, []);
+  }, [cookies]);
   return (
     <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
       {currentUser.accessToken ? (

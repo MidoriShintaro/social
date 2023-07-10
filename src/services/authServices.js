@@ -28,8 +28,11 @@ export const forgotPassword = async (email) => {
   return res.data;
 };
 
-export const isAuthenticate = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+export const isAuthenticate = (cookies) => {
+  if (cookies) {
+    localStorage.setItem("user", JSON.stringify(cookies));
+  }
+  const user = JSON.parse(localStorage.getItem("user")) || cookies.user;
   if (!user) {
     return {};
   }
