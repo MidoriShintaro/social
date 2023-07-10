@@ -26,7 +26,7 @@ export default function Login() {
   };
 
   const handleLoginFacebook = () => {
-    window.location.href = process.env.FACEBOOK_URL;
+    window.location.href = process.env.REACT_APP_FACEBOOK_URL;
   };
 
   const handleSubmit = async (e) => {
