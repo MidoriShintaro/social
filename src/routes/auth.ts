@@ -37,7 +37,7 @@ router.get(
     res.cookie("user", req.user.currentUser);
     res.cookie("accessToken", accessToken);
     res.cookie("refreshToken", refreshToken);
-    return res.redirect(process.env.SUCCESS_URL);
+    return res.redirect(process.env.SUCCESS_URL, 200);
   }
 );
 

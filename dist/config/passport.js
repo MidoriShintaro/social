@@ -29,7 +29,7 @@ function passportConfig(app) {
         // Handle the user profile data and authentication logic here
         const currentUser = yield User_1.default.findOne({ facebookId: profile.id });
         if (currentUser) {
-            return done(null, { currentUser, accessToken });
+            return done(null, currentUser);
         }
         const newUser = new User_1.default({
             facebookId: profile.id,
@@ -39,7 +39,7 @@ function passportConfig(app) {
             picturePhoto: (_c = profile.photos) === null || _c === void 0 ? void 0 : _c[0].value,
         });
         const user = yield newUser.save();
-        return done(null, { user, accessToken });
+        return done(null, user);
     })));
     passport_1.default.serializeUser(function (user, done) {
         done(null, user._id);

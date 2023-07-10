@@ -25,7 +25,7 @@ router.get("/facebook/callback", passport_1.default.authenticate("facebook", { s
     res.cookie("user", req.user.currentUser);
     res.cookie("accessToken", accessToken);
     res.cookie("refreshToken", refreshToken);
-    return res.redirect(process.env.SUCCESS_URL);
+    return res.redirect(process.env.SUCCESS_URL, 200);
 });
 exports.default = router;
 //# sourceMappingURL=auth.js.map
