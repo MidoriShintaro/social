@@ -21,7 +21,7 @@ export default function passportConfig(app: Express): void {
         // Handle the user profile data and authentication logic here
         const currentUser = await User.findOne({ facebookId: profile.id });
         if (currentUser) {
-          return done(null, { currentUser, accessToken });
+          return done(null, currentUser);
         }
         const newUser = new User({
           facebookId: profile.id,
@@ -31,7 +31,7 @@ export default function passportConfig(app: Express): void {
           picturePhoto: profile.photos?.[0].value,
         });
         const user = await newUser.save();
-        return done(null, { user, accessToken });
+        return done(null, user);
       }
     )
   );
