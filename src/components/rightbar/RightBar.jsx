@@ -11,7 +11,7 @@ export default function RightBar({ user, socket }) {
   const { currentUser } = useContext(AuthContext);
   const [suggestUser, setSuggestUser] = useState([]);
   const negative = useNavigate();
-  const [removeCookie] = useCookies();
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   useEffect(() => {
     const getSuggestUser = async () => {

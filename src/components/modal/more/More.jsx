@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie";
 
 export default function More() {
   const navigate = useNavigate();
-  const [removeCookie] = useCookies();
+  const [cookies, setCookie, removeCookie] = useCookies();
   return (
     <div className="sidebar-modal-more border fixed bottom-36 left-10 w-1/5 rounded-lg bg-white z-50 block">
       <ul className="w-full text-sm font-medium text-gray-900">
