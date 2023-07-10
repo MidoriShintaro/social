@@ -28,8 +28,15 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook", { session: false }),
   function (req: any, res: any) {
-    const accessToken = req.user.accessToken;
-    // console.log(req.l);
+    const user = req.user.currentUser;
+    const accessToken = signAccessToken({ id: user.id, isAdmin: user.isAdmin });
+    const refreshToken = signRefreshToken({
+      id: user.id,
+      isAdmin: user.isAdmin,
+    });
+    res.cookie("user", req.user.currentUser);
+    res.cookie("accessToken", accessToken);
+    res.cookie("refreshToken", refreshToken);
     return res.redirect(process.env.SUCCESS_URL);
   }
 );
