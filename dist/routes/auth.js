@@ -16,8 +16,15 @@ router.post("/changed-password", auth_1.protect, auth_1.changedPassword);
 router.patch("/reset-password/:token", auth_1.resetPassword);
 router.get("/facebook", passport_1.default.authenticate("facebook", { scope: "email" }));
 router.get("/facebook/callback", passport_1.default.authenticate("facebook", { session: false }), function (req, res) {
-    const accessToken = req.user.accessToken;
-    // console.log(req.l);
+    const user = req.user.currentUser;
+    const accessToken = (0, auth_1.signAccessToken)({ id: user.id, isAdmin: user.isAdmin });
+    const refreshToken = (0, auth_1.signRefreshToken)({
+        id: user.id,
+        isAdmin: user.isAdmin,
+    });
+    res.cookie("user", req.user.currentUser);
+    res.cookie("accessToken", accessToken);
+    res.cookie("refreshToken", refreshToken);
     return res.redirect(process.env.SUCCESS_URL);
 });
 exports.default = router;
