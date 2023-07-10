@@ -34,8 +34,6 @@ export const forgotPassword = async (email) => {
 export const isAuthenticate = (cookies) => {
   if (cookies.user) {
     localStorage.setItem("user", JSON.stringify(cookies));
-  } else {
-    localStorage.setItem("user", "");
   }
   const user = JSON.parse(localStorage.getItem("user")) || cookies.user;
   if (!user) {
