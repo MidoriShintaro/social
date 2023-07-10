@@ -18,6 +18,10 @@ function Register() {
       );
   };
 
+  const handleLoginFacebook = () => {
+    window.location.href = process.env.FACEBOOK_URL;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValidEmail = validateEmail(email);
@@ -52,7 +56,10 @@ function Register() {
         />
         <button className="mt-4 flex w-4/5 justify-center items-center">
           <div className="bg-no-repeat bg-blue-500 mr-1 w-full rounded-lg p-1">
-            <span className="text-xs text-white font-semibold">
+            <span
+              className="text-xs text-white font-semibold"
+              onClick={handleLoginFacebook}
+            >
               Log in with Facebook
             </span>
           </div>
