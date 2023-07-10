@@ -5,11 +5,13 @@ import api from "../../axios/axios";
 import SuggestUser from "../suggestUser/SuggestUser";
 import { logout } from "../../services/authServices";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function RightBar({ user, socket }) {
   const { currentUser } = useContext(AuthContext);
   const [suggestUser, setSuggestUser] = useState([]);
   const negative = useNavigate();
+  const [removeCookie] = useCookies();
 
   useEffect(() => {
     const getSuggestUser = async () => {
@@ -49,7 +51,7 @@ export default function RightBar({ user, socket }) {
             <p
               className="text-sm text-blue-500 font-medium hover:cursor-pointer"
               onClick={() => {
-                logout();
+                logout(removeCookie);
                 negative("/login");
                 window.location.reload();
               }}

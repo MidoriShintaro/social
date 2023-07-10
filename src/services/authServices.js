@@ -19,8 +19,11 @@ export const register = async (email, username, fullname, password) => {
   return res.data;
 };
 
-export const logout = () => {
+export const logout = (removeCookie) => {
   localStorage.removeItem("user");
+  removeCookie("user");
+  removeCookie("accessToken");
+  removeCookie("refreshToken");
 };
 
 export const forgotPassword = async (email) => {
@@ -29,8 +32,10 @@ export const forgotPassword = async (email) => {
 };
 
 export const isAuthenticate = (cookies) => {
-  if (cookies) {
+  if (cookies.user) {
     localStorage.setItem("user", JSON.stringify(cookies));
+  } else {
+    localStorage.setItem("user", "");
   }
   const user = JSON.parse(localStorage.getItem("user")) || cookies.user;
   if (!user) {
